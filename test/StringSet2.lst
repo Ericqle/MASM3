@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 6.14.8444		    04/19/18 14:07:04
+Microsoft (R) Macro Assembler Version 6.14.8444		    04/19/18 16:38:12
 StringSet2.asm						     Page 1 - 1
 
 
@@ -33,36 +33,36 @@ StringSet2.asm						     Page 1 - 1
 				;===================================================
  00000000			String_indexOf_1 proc
  = [ebp + 12]				ptrString equ [ebp + 12]	;get address of string
- = [ebp + 8]				char equ [ebp + 8]		;get char
+ = [ebp + 8]				char equ [ebp + 8]			;get char
 					
- 00000000  55				push ebp
- 00000001  8B EC			mov ebp, esp
+ 00000000  55				push ebp		;push ebp onto the stack
+ 00000001  8B EC			mov ebp, esp	;move the stack pointer to the base pointer
 					
- 00000003  56				push esi
- 00000004  53				push ebx
+ 00000003  56				push esi		;push esi onto the stack
+ 00000004  53				push ebx		;push ebx onto the stack
 					
- 00000005  8B 75 0C			mov esi, ptrString
- 00000008  B8 00000000			mov eax, 0
+ 00000005  8B 75 0C			mov esi, ptrString	;move the start of ptrString into esi
+ 00000008  B8 00000000			mov eax, 0			;move 0 into eax
 					
  0000000D			nextChar:
- 0000000D  8A 1E			mov bl, [esi] 
- 0000000F  8A 7D 08			mov bh, char
- 00000012  80 FB 00			cmp bl, 0
- 00000015  75 02			jne compare
- 00000017  EB 08			jmp endProc
+ 0000000D  8A 1E			mov bl, [esi] 		;compare the string element to the character
+ 0000000F  8A 7D 08			mov bh, char		;move char into bh
+ 00000012  80 FB 00			cmp bl, 0			;compare the bl to 0 (null terminator)
+ 00000015  75 02			jne compare			;if not equal, jump to compare
+ 00000017  EB 08			jmp endProc			;else, jump to endProc
 					
  00000019			compare:
- 00000019  46				inc esi
- 0000001A  38 DF			cmp bh, bl
- 0000001C  74 03			je endProc
- 0000001E  40				inc eax
- 0000001F  EB EC			jmp nextChar
+ 00000019  46				inc esi			;increment esi
+ 0000001A  38 DF			cmp bh, bl		;compare the character to the string
+ 0000001C  74 03			je endProc		;if the character and string are the same, jump to endProc
+ 0000001E  40				inc eax			;increment eax
+ 0000001F  EB EC			jmp nextChar	;jump to the nextChar
 					
 
  00000021			endProc:
- 00000021  5B				pop ebx 
- 00000022  5E				pop esi 
- 00000023  5D				pop ebp
+ 00000021  5B				pop ebx 	;pop ebx off the stack
+ 00000022  5E				pop esi 	;pop esi off the stack
+ 00000023  5D				pop ebp		;pop ebp off the stack
  00000024  C3				ret
  00000025			String_indexOf_1 endp
 
@@ -252,8 +252,122 @@ StringSet2.asm						     Page 1 - 1
  000000DF  5D				pop ebp
  000000E0  C3				ret
  000000E1			String_lastIndexOf_2 endp
+
+
+				;== String_toLowerCase============================
+				; 
+				;=================================================
+
+ 000000E1				String_toLowerCase proc
+ = [ebp + 8]				ptrString equ [ebp + 8]
+					
+ 000000E1  55				push ebp		;push the base pointer
+ 000000E2  8B EC			mov	 ebp, esp	;move the stack pointer to the base pointer
+					
+ 000000E4  56				push esi
+ 000000E5  53				push ebx
+					
+ 000000E6  8B 75 08			mov esi, ptrString	;move the start of the address into esi
+
+					
+ 000000E9			compare:
+ 000000E9  8A 1E			mov bl, [esi]		;stores start of string address
+					
+ 000000EB  80 FB 00			cmp bl, 0			;compare first element to 0
+ 000000EE  74 12			je endProc			;if equal exit
+					
+ 000000F0  80 FB 41			cmp bl, 'A'			;compare the address ptr to 'a'
+ 000000F3  72 08			jb	toLower			;if greater, jump to toUpper
+						
+ 000000F5  80 FB 5A			cmp bl, 'Z'			;compare the address ptr to 'z'
+ 000000F8  77 03			ja	toLower			;if less, jump to toUpper
+					
+ 000000FA  80 C3 20			add bl, 32
+					
+					
+ 000000FD			toLower:
+					;sub bl, 32		;convert to uppercase
+ 000000FD  88 1E			mov [esi], bl		;store the value into eax
+ 000000FF  46				inc esi			;inc ecx to traverse string
+					
+					
+ 00000100  EB E7			jmp compare		;jump to compare to repeat steps
+
+
+ 00000102			endProc:		;Pop all registers
+ 00000102  8B 45 08			mov eax, ptrString
+					
+ 00000105  5B				pop ebx
+ 00000106  5E				pop esi
+ 00000107  5D				pop ebp
+ 00000108  C3				ret
+
+
+
+ 00000109			String_toLowerCase endp
+
+
+
+
+
+
+
+
+
+ 00000109			String_toUpperCase proc
+
+ = [ebp + 8]				ptrString equ [ebp + 8]
+					
+ 00000109  55				push ebp		;push the base pointer
+ 0000010A  8B EC			mov	 ebp, esp	;move the stack pointer to the base pointer
+					
+ 0000010C  56				push esi
+ 0000010D  53				push ebx
+					
+ 0000010E  8B 75 08			mov esi, ptrString	;move the start of the address into esi
+
+					
+ 00000111			compare:
+ 00000111  8A 1E			mov bl, [esi]		;stores start of string address
+					
+ 00000113  80 FB 00			cmp bl, 0			;compare first element to 0
+ 00000116  74 12			je endProc			;if equal exit
+					
+ 00000118  80 FB 61			cmp bl, 'a'			;compare the address ptr to 'a'
+ 0000011B  72 08			jb	toUpper			;if greater, jump to toUpper
+						
+ 0000011D  80 FB 7A			cmp bl, 'z'			;compare the address ptr to 'z'
+ 00000120  77 03			ja	toUpper			;if less, jump to toUpper
+					
+ 00000122  80 EB 20			sub bl, 32
+					
+					
+ 00000125			toUpper:
+					;sub bl, 32		;convert to uppercase
+ 00000125  88 1E			mov [esi], bl		;store the value into eax
+ 00000127  46				inc esi			;inc ecx to traverse string
+					
+					
+ 00000128  EB E7			jmp compare		;jump to compare to repeat steps
+
+
+ 0000012A			endProc:		;Pop all registers
+ 0000012A  8B 45 08			mov eax, ptrString
+					
+ 0000012D  5B				pop ebx
+ 0000012E  5E				pop esi
+ 0000012F  5D				pop ebp
+ 00000130  C3				ret
+
+ 00000131			String_toUpperCase endp
+
+
+
 				end
-Microsoft (R) Macro Assembler Version 6.14.8444		    04/19/18 14:07:04
+
+
+
+Microsoft (R) Macro Assembler Version 6.14.8444		    04/19/18 16:38:12
 StringSet2.asm						     Symbols 2 - 1
 
 
@@ -348,7 +462,7 @@ Segments and Groups:
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
 _DATA  . . . . . . . . . . . . .	32 Bit	 00000000 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 000000E1 Para	  Public  'CODE'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000131 Para	  Public  'CODE'	
 
 
 Procedures,  parameters and locals:
@@ -459,6 +573,14 @@ String_lastIndexOf_2 . . . . . .	P Near	 000000B9 _TEXT	Length= 00000028 Public 
   nextChar . . . . . . . . . . .	L Near	 000000C7 _TEXT	
   compare  . . . . . . . . . . .	L Near	 000000D4 _TEXT	
   endProc  . . . . . . . . . . .	L Near	 000000DC _TEXT	
+String_toLowerCase . . . . . . .	P Near	 000000E1 _TEXT	Length= 00000028 Public STDCALL
+  compare  . . . . . . . . . . .	L Near	 000000E9 _TEXT	
+  toLower  . . . . . . . . . . .	L Near	 000000FD _TEXT	
+  endProc  . . . . . . . . . . .	L Near	 00000102 _TEXT	
+String_toUpperCase . . . . . . .	P Near	 00000109 _TEXT	Length= 00000028 Public STDCALL
+  compare  . . . . . . . . . . .	L Near	 00000111 _TEXT	
+  toUpper  . . . . . . . . . . .	L Near	 00000125 _TEXT	
+  endProc  . . . . . . . . . . .	L Near	 0000012A _TEXT	
 SystemTimeToFileTime . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WaitMsg  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteBinB  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
@@ -717,7 +839,7 @@ lightRed . . . . . . . . . . . .	Number	 0000000Ch
 magenta  . . . . . . . . . . . .	Number	 00000005h   
 ptrString1 . . . . . . . . . . .	Text   	 [ebp + 12]
 ptrString2 . . . . . . . . . . .	Text   	 [ebp + 8]
-ptrString  . . . . . . . . . . .	Text   	 [ebp + 16]
+ptrString  . . . . . . . . . . .	Text   	 [ebp + 8]
 red  . . . . . . . . . . . . . .	Number	 00000004h   
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
 wsprintf . . . . . . . . . . . .	Text   	 wsprintfA

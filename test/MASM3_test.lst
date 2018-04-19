@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 6.14.8444		    04/19/18 14:07:04
+Microsoft (R) Macro Assembler Version 6.14.8444		    04/19/18 16:38:12
 MASM3_test.asm						     Page 1 - 1
 
 
@@ -30,55 +30,67 @@ MASM3_test.asm						     Page 1 - 1
 					
 					extern String_indexOf_2@0:proc
  = String_indexOf_2@0			String_indexOf_2 equ String_indexOf_2@0
+					
 					extern String_indexOf_1@0:proc
  = String_indexOf_1@0			String_indexOf_1 equ String_indexOf_1@0
+					
 					extern String_indexOf_3@0:proc
  = String_indexOf_3@0			String_indexOf_3 equ String_indexOf_3@0
+					
 					extern String_lastIndexOf_1@0:proc
  = String_lastIndexOf_1@0		String_lastIndexOf_1 equ String_lastIndexOf_1@0
+					
 					extern String_lastIndexOf_2@0:proc
  = String_lastIndexOf_2@0		String_lastIndexOf_2 equ String_lastIndexOf_2@0
 					
+					extern String_toLowerCase@0:proc
+ = String_toLowerCase@0			String_toLowerCase equ String_toLowerCase@0
+					
+					extern String_toUpperCase@0:proc
+ = String_toUpperCase@0			String_toUpperCase equ String_toUpperCase@0
+					
+					
  00000000				.data
- 00000000 68 65 6C 6C 6F		string1 byte "hello world",0
-	   20 77 6F 72 6C
-	   64 00
- 0000000C 77 6F 72 6C 64		subString byte "world",0
+ 00000000 48 65 4C 6C 6F		string1 byte "HeLlo woRlD!",0
+	   20 77 6F 52 6C
+	   44 21 00
+ 0000000D 77 6F 72 6C 64		subString byte "world",0
 	   00
  00000000				.code
  00000000			main proc
 
  00000000  68 00000000 R		push offset string1	
- 00000005  6A 68			push 'h'
- 00000007  6A 06			push 6
- 00000009  E8 00000000 E		call String_lastIndexOf_2
- 0000000E  E8 00000000 E		call WriteInt
- 00000013  83 C4 0C			add esp, 12
+
+ 00000005  E8 00000000 E		call String_toLowercase
+					
+ 0000000A  8B D0			mov edx, eax
+ 0000000C  E8 00000000 E		call WriteString
+ 00000011  83 C4 04			add esp, 4
 					
 					exit
- 0000001D			main endp
+ 0000001B			main endp
 
 				;== String_length ==================================
 				; Return the number of characters in a string
 				;===================================================
- 0000001D			String_length proc 
+ 0000001B			String_length proc 
  = [ebp + 8]				ptrString equ [ebp + 8]
- 0000001D  55				push ebp
- 0000001E  8B EC			mov ebp, esp
- 00000020  56				push esi
- 00000021  B8 00000000			mov eax, 0
- 00000026  8B 75 08			mov esi, ptrString
- 00000029			beginWhile:
- 00000029  80 3E 00			cmp byte ptr [esi], 0
- 0000002C  74 04			je endWhile
- 0000002E  46				inc esi
- 0000002F  40				inc eax
- 00000030  EB F7			jmp beginWhile
- 00000032			endWhile:
- 00000032  5E				pop esi
- 00000033  5D				pop ebp
- 00000034  C3				ret
- 00000035			String_length endp
+ 0000001B  55				push ebp
+ 0000001C  8B EC			mov ebp, esp
+ 0000001E  56				push esi
+ 0000001F  B8 00000000			mov eax, 0
+ 00000024  8B 75 08			mov esi, ptrString
+ 00000027			beginWhile:
+ 00000027  80 3E 00			cmp byte ptr [esi], 0
+ 0000002A  74 04			je endWhile
+ 0000002C  46				inc esi
+ 0000002D  40				inc eax
+ 0000002E  EB F7			jmp beginWhile
+ 00000030			endWhile:
+ 00000030  5E				pop esi
+ 00000031  5D				pop ebp
+ 00000032  C3				ret
+ 00000033			String_length endp
 
 				end main
 
@@ -86,7 +98,7 @@ MASM3_test.asm						     Page 1 - 1
 
 
 
-Microsoft (R) Macro Assembler Version 6.14.8444		    04/19/18 14:07:04
+Microsoft (R) Macro Assembler Version 6.14.8444		    04/19/18 16:38:12
 MASM3_test.asm						     Symbols 2 - 1
 
 
@@ -180,8 +192,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 00000012 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 00000035 Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000013 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000033 Para	  Public  'CODE'	
 
 
 Procedures,  parameters and locals:
@@ -269,9 +281,9 @@ Str_copy . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 Str_length . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 Str_trim . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 Str_ucase  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-String_length  . . . . . . . . .	P Near	 0000001D _TEXT	Length= 00000018 Public STDCALL
-  beginWhile . . . . . . . . . .	L Near	 00000029 _TEXT	
-  endWhile . . . . . . . . . . .	L Near	 00000032 _TEXT	
+String_length  . . . . . . . . .	P Near	 0000001B _TEXT	Length= 00000018 Public STDCALL
+  beginWhile . . . . . . . . . .	L Near	 00000027 _TEXT	
+  endWhile . . . . . . . . . . .	L Near	 00000030 _TEXT	
 SystemTimeToFileTime . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WaitMsg  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteBinB  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
@@ -291,7 +303,7 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000001D Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000001B Public STDCALL
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
@@ -436,6 +448,10 @@ String_lastIndexOf_1@0 . . . . .	L Near	 00000000 FLAT	External STDCALL
 String_lastIndexOf_1 . . . . . .	Text   	 String_lastIndexOf_1@0
 String_lastIndexOf_2@0 . . . . .	L Near	 00000000 FLAT	External STDCALL
 String_lastIndexOf_2 . . . . . .	Text   	 String_lastIndexOf_2@0
+String_toLowerCase@0 . . . . . .	L Near	 00000000 FLAT	External STDCALL
+String_toLowerCase . . . . . . .	Text   	 String_toLowerCase@0
+String_toUpperCase@0 . . . . . .	L Near	 00000000 FLAT	External STDCALL
+String_toUpperCase . . . . . . .	Text   	 String_toUpperCase@0
 TAB  . . . . . . . . . . . . . .	Number	 00000009h   
 TRUE . . . . . . . . . . . . . .	Number	 00000001h   
 TRUNCATE_EXISTING  . . . . . . .	Number	 00000005h   
@@ -537,7 +553,7 @@ magenta  . . . . . . . . . . . .	Number	 00000005h
 ptrString  . . . . . . . . . . .	Text   	 [ebp + 8]
 red  . . . . . . . . . . . . . .	Number	 00000004h   
 string1  . . . . . . . . . . . .	Byte	 00000000 _DATA	
-subString  . . . . . . . . . . .	Byte	 0000000C _DATA	
+subString  . . . . . . . . . . .	Byte	 0000000D _DATA	
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
 wsprintf . . . . . . . . . . . .	Text   	 wsprintfA
 yellow . . . . . . . . . . . . .	Number	 0000000Eh   

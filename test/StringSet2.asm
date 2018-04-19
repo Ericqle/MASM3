@@ -12,36 +12,36 @@
 ;===================================================
 String_indexOf_1 proc
 	ptrString equ [ebp + 12]	;get address of string
-	char equ [ebp + 8]		;get char
+	char equ [ebp + 8]			;get char
 	
-	push ebp
-	mov ebp, esp
+	push ebp		;push ebp onto the stack
+	mov ebp, esp	;move the stack pointer to the base pointer
 	
-	push esi
-	push ebx
+	push esi		;push esi onto the stack
+	push ebx		;push ebx onto the stack
 	
-	mov esi, ptrString
-	mov eax, 0
+	mov esi, ptrString	;move the start of ptrString into esi
+	mov eax, 0			;move 0 into eax
 	
 nextChar:
-	mov bl, [esi] 
-	mov bh, char
-	cmp bl, 0
-	jne compare
-	jmp endProc
+	mov bl, [esi] 		;compare the string element to the character
+	mov bh, char		;move char into bh
+	cmp bl, 0			;compare the bl to 0 (null terminator)
+	jne compare			;if not equal, jump to compare
+	jmp endProc			;else, jump to endProc
 	
 compare:
-	inc esi
-	cmp bh, bl
-	je endProc
-	inc eax
-	jmp nextChar
+	inc esi			;increment esi
+	cmp bh, bl		;compare the character to the string
+	je endProc		;if the character and string are the same, jump to endProc
+	inc eax			;increment eax
+	jmp nextChar	;jump to the nextChar
 	
 
 endProc:
-	pop ebx 
-	pop esi 
-	pop ebp
+	pop ebx 	;pop ebx off the stack
+	pop esi 	;pop esi off the stack
+	pop ebp		;pop ebp off the stack
 	ret
 String_indexOf_1 endp
 
@@ -231,5 +231,115 @@ endProc:
 	pop ebp
 	ret
 String_lastIndexOf_2 endp
+
+
+;== String_toLowerCase============================
+; 
+;=================================================
+
+	String_toLowerCase proc
+	ptrString equ [ebp + 8]
+	
+	push ebp		;push the base pointer
+	mov	 ebp, esp	;move the stack pointer to the base pointer
+	
+	push esi
+	push ebx
+	
+	mov esi, ptrString	;move the start of the address into esi
+
+	
+compare:
+	mov bl, [esi]		;stores start of string address
+	
+	cmp bl, 0			;compare first element to 0
+	je endProc			;if equal exit
+	
+	cmp bl, 'A'			;compare the address ptr to 'a'
+	jb	toLower			;if greater, jump to toLower
+		
+	cmp bl, 'Z'			;compare the address ptr to 'z'
+	ja	toLower			;if less, jump to toLower
+	
+	add bl, 32
+	
+	
+toLower:
+	;sub bl, 32		;convert to uppercase
+	mov [esi], bl		;store the value into eax
+	inc esi			;inc ecx to traverse string
+	
+	
+	jmp compare		;jump to compare to repeat steps
+
+
+endProc:		;Pop all registers
+	mov eax, ptrString
+	
+	pop ebx
+	pop esi
+	pop ebp
+	ret
+
+
+
+String_toLowerCase endp
+
+
+
+
+
+
+String_toUpperCase proc
+
+	ptrString equ [ebp + 8]
+	
+	push ebp		;push the base pointer
+	mov	 ebp, esp	;move the stack pointer to the base pointer
+	
+	push esi
+	push ebx
+	
+	mov esi, ptrString	;move the start of the address into esi
+
+	
+compare:
+	mov bl, [esi]		;stores start of string address
+	
+	cmp bl, 0			;compare first element to 0
+	je endProc			;if equal exit
+	
+	cmp bl, 'a'			;compare the address ptr to 'a'
+	jb	toUpper			;if greater, jump to toUpper
+		
+	cmp bl, 'z'			;compare the address ptr to 'z'
+	ja	toUpper			;if less, jump to toUpper
+	
+	sub bl, 32
+	
+	
+toUpper:
+	;sub bl, 32		;convert to uppercase
+	mov [esi], bl		;store the value into eax
+	inc esi			;inc ecx to traverse string
+	
+	
+	jmp compare		;jump to compare to repeat steps
+
+
+endProc:		;Pop all registers
+	mov eax, ptrString
+	
+	pop ebx
+	pop esi
+	pop ebp
+	ret
+
+String_toUpperCase endp
+
+
+
 end
+
+
 
