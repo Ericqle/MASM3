@@ -1,7 +1,16 @@
-Microsoft (R) Macro Assembler Version 6.14.8444		    04/19/18 10:20:13
+Microsoft (R) Macro Assembler Version 6.14.8444		    04/19/18 23:09:44
 StringSet1.asm						     Page 1 - 1
 
 
+				;=====================================================================================
+				; Author: 		Eric Le
+				; Assignment:	StringSet1 (MASM3)
+				; Class:		CS3B
+				; Date:			April 19, 2018
+				; Description:	
+				;	This file contains the original implementaions of the first assigned
+				;	set of string functions
+				;=====================================================================================
 					include ..\Irvine\Irvine32.inc
 			      C ; Include file for Irvine32.lib             (Irvine32.inc)
 			      C 
@@ -32,127 +41,147 @@ StringSet1.asm						     Page 1 - 1
 				; Compare 2 strings and return a 1 in eax if true 
 				; 	and 0 in eax if false
 				;===================================================
- 00000000			String_equals proc 				;start of procedure
+ 00000000			String_equals proc 				
  = [ebp + 12]				ptrString1 equ [ebp + 12]	;get address of string1
  = [ebp + 8]				ptrString2 equ [ebp + 8]	;get address of string2
 					
- 00000000  55				push ebp					;push ebp to stack
- 00000001  8B EC			mov ebp, esp				;save esp into ebp
+					; push ebp ans save esp into ebp to use
+ 00000000  55				push ebp
+ 00000001  8B EC			mov ebp, esp
 					
- 00000003  53				push ebx					;push ebx to stack 
- 00000004  52				push edx					;push edx to stack 							
- 00000005  56				push esi					;push esi to stack 
- 00000006  57				push edi					;push edi to stack 
+					; Push other registers to be used 
+ 00000003  53				push ebx
+ 00000004  52				push edx				
+ 00000005  56				push esi
+ 00000006  57				push edi 
 
-
- 00000007  B8 00000001			mov eax, 1					;set eax true
- 0000000C  8B 75 0C			mov esi, ptrString1			;save string 1 pointer to esi
- 0000000F  8B 7D 08			mov edi, ptrString2			;save string 2 pointer to esi
+					; Initialize to true ans mov string pointers
+ 00000007  B8 00000001			mov eax, 1
+ 0000000C  8B 75 0C			mov esi, ptrString1	
+ 0000000F  8B 7D 08			mov edi, ptrString2	
 					
- 00000012			nextChar:						;label for next char in string
- 00000012  8A 1E			mov bl, [esi]				;save char of string1 in dl
- 00000014  8A 17			mov dl, [edi]				;save char of string2 in bl
- 00000016  80 FB 00			cmp bl, 0					;chaeck if end of string
- 00000019  75 07			jne compare					;goto compare label if not 0
- 0000001B  80 FA 00			cmp dl, 0					;check if end of string
- 0000001E  75 02			jne compare					;goto compare label if not 0
- 00000020  EB 0B			jmp endProc					;goto end procedure if 0
-
- 00000022			compare:						;label to compare the chars
- 00000022  46				inc esi						;prep for next char
- 00000023  47				inc edi						;prep for next char
- 00000024  38 D3			cmp bl, dl					;compare the chars
- 00000026  74 EA			je nextChar					;goto next char if true
- 00000028  B8 00000000			mov eax, 0					;return value of false if not equal
-
- 0000002D			endProc:						;label for end procedure
- 0000002D  5F				pop edi						;pop edi off stack
- 0000002E  5E				pop esi						;pop esi off stack
- 0000002F  5A				pop edx						;pop edx off stack
- 00000030  5B				pop ebx						;pop ebx off stack
+					; Segment checks for end of string by looking for null
+ 00000012			nextChar:
+ 00000012  8A 1E			mov bl, [esi]
+ 00000014  8A 17			mov dl, [edi]
+ 00000016  80 FB 00			cmp bl, 0
+ 00000019  75 07			jne compare	
+ 0000001B  80 FA 00			cmp dl, 0			
+ 0000001E  75 02			jne compare
+ 00000020  EB 0B			jmp endProc
 					
- 00000031  5D				pop ebp						;pop ebp off stack
- 00000032  C3				ret							;return to prev address
- 00000033			String_equals endp				;end of procedure
+					; Segment to compare two chars and loop back
+ 00000022			compare:
+ 00000022  46				inc esi	
+ 00000023  47				inc edi	
+ 00000024  38 D3			cmp bl, dl
+ 00000026  74 EA			je nextChar	
+ 00000028  B8 00000000			mov eax, 0
+
+					; Pop all used registers and return
+ 0000002D			endProc:
+ 0000002D  5F				pop edi	
+ 0000002E  5E				pop esi	
+ 0000002F  5A				pop edx	
+ 00000030  5B				pop ebx	
+					
+ 00000031  5D				pop ebp	
+ 00000032  C3				ret	
+ 00000033			String_equals endp
 
 				;== String_equalsIgnoreCase ========================
 				; Compare 2 strings and return a 1 in eax if true 
 				; 	and 0 in eax if false, but ignores casing
 				;===================================================
- 00000033			String_equalsIgnoreCase proc 	;start of procedure
+ 00000033			String_equalsIgnoreCase proc
  = [ebp + 12]				ptrString1 equ [ebp + 12]	;get address of string1
  = [ebp + 8]				ptrString2 equ [ebp + 8]	;get address of string2
 					
- 00000033  55				push ebp					;push ebp to stack
- 00000034  8B EC			mov ebp, esp				;save esp into ebp
+					; push ebp ans save esp into ebp to use
+ 00000033  55				push ebp
+ 00000034  8B EC			mov ebp, esp
 					
- 00000036  53				push ebx					;push ebx to the stack
- 00000037  52				push edx					;push edx to the stack
- 00000038  56				push esi					;push esi to the stack
- 00000039  57				push edi					;push edi to the stack
+					; Push other registers to be used
+ 00000036  53				push ebx
+ 00000037  52				push edx
+ 00000038  56				push esi
+ 00000039  57				push edi
 
- 0000003A  B8 00000001			mov eax, 1					;set return to true 
- 0000003F  8B 75 0C			mov esi, ptrString1			;save string1 address in esi
- 00000042  8B 7D 08			mov edi, ptrString2			;save string2 address in edi
+					; Initialize to true ans mov string pointers
+ 0000003A  B8 00000001			mov eax, 1
+ 0000003F  8B 75 0C			mov esi, ptrString1	
+ 00000042  8B 7D 08			mov edi, ptrString2	
 					
- 00000045			nextChar:						;label for next char
- 00000045  8A 1E			mov bl, [esi]				;save string1 char into bl
- 00000047  8A 17			mov dl, [edi]				;save string2 char into dl
+					; Segment to check for end of string
+ 00000045			nextChar:
+ 00000045  8A 1E			mov bl, [esi]
+ 00000047  8A 17			mov dl, [edi]
+ 00000049  80 FB 00			cmp bl, 0
+ 0000004C  75 07			jne compare	
+ 0000004E  80 FA 00			cmp dl, 0
+ 00000051  75 02			jne compare	
+ 00000053  EB 25			jmp endProc	
 
- 00000049  80 FB 00			cmp bl, 0					;check if end of string
- 0000004C  75 07			jne compare					;goto compare if not
- 0000004E  80 FA 00			cmp dl, 0					;check if end of string
- 00000051  75 02			jne compare					;goto compare if not 
- 00000053  EB 25			jmp endProc					;if end, goto endProc
-					
- 00000055			compare:						;label for making char lowercase
- 00000055  46				inc esi						;prep for next char 
- 00000056  47				inc edi						;prep for next char
-					
- 00000057  80 FB 61			cmp bl, 'a'					;make sure char is lowercase
- 0000005A  72 08			jb cont						;if so, continue
- 0000005C  80 FB 7A			cmp bl, 'z'					;make sure char is lowercase
- 0000005F  77 03			ja cont						;if so, continue
- 00000061  80 EB 20			sub bl, 32					;make lowercase to compare
-					
- 00000064			cont:							;label for char for other string  to lowercase
- 00000064  80 FA 61			cmp dl, 'a'					;make sure char is lowercase
- 00000067  72 08			jb cont2					;if so, continue
- 00000069  80 FA 7A			cmp dl, 'z'					;make sure char is lowercase
- 0000006C  77 03			ja cont2					;if so, continue
- 0000006E  80 EA 20			sub dl, 32					;make lowercase
-					
- 00000071			cont2:							;label that compares chars
- 00000071  38 D3			cmp bl, dl					;compare
- 00000073  74 D0			je nextChar					;next cahr if equal
- 00000075  B8 00000000			mov eax, 0					;set return false if not equal
+					; Segment to check for casing and make uppercase
+ 00000055			compare:
+ 00000055  46				inc esi
+ 00000056  47				inc edi	
+ 00000057  80 FB 61			cmp bl, 'a'	;makes sure the char is within range of alphabet
+ 0000005A  72 08			jb cont	
+ 0000005C  80 FB 7A			cmp bl, 'z'	;makes sure the char is within range of alphabet
+ 0000005F  77 03			ja cont	
+ 00000061  80 EB 20			sub bl, 32	
 
- 0000007A			endProc:						;label for end procedure
- 0000007A  5F				pop edi						;pop edi off the stack
- 0000007B  5E				pop esi						;pop esi off the stack
- 0000007C  5A				pop edx						;pop edx off the stack
- 0000007D  5B				pop ebx						;pop ebx off the stack
+					; Segment that deos the same but for other char
+ 00000064			cont:				
+ 00000064  80 FA 61			cmp dl, 'a'	;makes sure the char is within range of alphabet
+ 00000067  72 08			jb cont2		
+ 00000069  80 FA 7A			cmp dl, 'z'	;makes sure the char is within range of alphabet
+ 0000006C  77 03			ja cont2	
+ 0000006E  80 EA 20			sub dl, 32
 					
- 0000007E  5D				pop ebp						;pop ebp off the stack
- 0000007F  C3				ret							;return to prev address
- 00000080			String_equalsIgnoreCase endp	;end of procedure
+					; Segment to check if chars are equal
+ 00000071			cont2:			
+ 00000071  38 D3			cmp bl, dl				
+ 00000073  74 D0			je nextChar					
+ 00000075  B8 00000000			mov eax, 0	
+
+					; Pop all used registers and return
+ 0000007A			endProc:		
+ 0000007A  5F				pop edi	
+ 0000007B  5E				pop esi	
+ 0000007C  5A				pop edx	
+ 0000007D  5B				pop ebx	
+					
+ 0000007E  5D				pop ebp						
+ 0000007F  C3				ret	
+ 00000080			String_equalsIgnoreCase endp
 
 				;== String_copy ====================================
-				; 
+				; Allocates new memory for a string and copies the
+				;	source sting contents into the newly created
+				;	string
 				;===================================================
- 00000080			String_copy proc				;start of procedure
+ 00000080			String_copy proc
  = [ebp + 8]				ptrString equ [ebp + 8]		;get address of the string
- 00000080  55				push ebp					;push ebp to the stack
- 00000081  8B EC			mov ebp, esp				;save esp into ebp
 					
- 00000083  56				push esi					;
+					; push ebp ans save esp into ebp to use
+ 00000080  55				push ebp
+ 00000081  8B EC			mov ebp, esp
+					
+					; Push other registers to be used
+ 00000083  56				push esi
  00000084  57				push edi
  00000085  53				push ebx
 					
+					; Copy ptrString into esi
  00000086  8B 75 08			mov esi, ptrString
-					invoke memoryallocBailey, 1000
- 00000093  8B F8			mov edi, eax
 					
+					; Allocate new memory for the new string
+					invoke memoryallocBailey, 1000
+ 00000093  8B F8			mov edi, eax	;new strings value is now in edi and eax
+					
+					; Segment to check for end of string for source
  00000095			nextChar:
  00000095  8A 3E			mov bh, [esi]
  00000097  8A 1F			mov bl, [edi]
@@ -160,12 +189,15 @@ StringSet1.asm						     Page 1 - 1
  0000009C  75 02			jne copy
  0000009E  EB 06			jmp endProc
 
+					; Segment to copy contents into the new string and move
+					;  to the next char
  000000A0			copy:
  000000A0  88 3F			mov [edi], bh
  000000A2  46				inc esi
  000000A3  47				inc edi
  000000A4  EB EF			jmp nextChar
 					
+					; Pop all used registers and return
  000000A6			endProc:
  000000A6  5B				pop ebx
  000000A7  5F				pop edi
@@ -175,49 +207,63 @@ StringSet1.asm						     Page 1 - 1
  000000AB			String_copy endp
 
 				;== String_substring_1 =============================
-				; 
+				; Allocate memory for a new string and copy the 
+				;	contets of a source string into it based off 
+				;	given indices
 				;===================================================
  000000AB			String_substring_1 proc	
- = [ebp + 16]				ptrString equ [ebp + 16]
- = [ebp + 12]				beginIndex equ [ebp + 12]
- = [ebp + 8]				endIndex equ [ebp + 8]
+ = [ebp + 16]				ptrString equ [ebp + 16]	; address of string1
+ = [ebp + 12]				beginIndex equ [ebp + 12]	; beginning index
+ = [ebp + 8]				endIndex equ [ebp + 8]		; ending index
 					
+					; push ebp ans save esp into ebp to use
  000000AB  55				push ebp
  000000AC  8B EC			mov ebp, esp
 					
+					; Push other registers to be used
  000000AE  56				push esi
  000000AF  57				push edi
  000000B0  53				push ebx
  000000B1  51				push ecx
  000000B2  52				push edx
 					
+					; Copy ptrString into esi
  000000B3  8B 75 10			mov esi, ptrString
-					invoke memoryallocBailey, 1000
- 000000C0  8B F8			mov edi, eax
 					
+					; Allocate new momory for new string
+					invoke memoryallocBailey, 1000
+ 000000C0  8B F8			mov edi, eax	;new strings address in edi and eax
+					
+					; Save indices
  000000C2  8B 55 0C			mov edx, beginIndex
  000000C5  8B 4D 08			mov ecx, endIndex
 					
+					; Check if endi index is less that beginning index
  000000C8  3B D1			cmp edx, ecx
  000000CA  7E 18			jle continue
  000000CC  EB 2D			jmp endProc
 					
+					; Check if the index is less than 0
  000000CE  83 FA 00			cmp edx, 0
  000000D1  7D 11			jge continue
  000000D3  EB 26			jmp endProc
 					
+					; Get String Length of string1
  000000D5  56				push esi
  000000D6  E8 00000000 E		call String_length
  000000DB  83 C4 04			add esp, 4
 					
+					; Check if the index is greater than the length
  000000DE  3B C8			cmp ecx, eax
  000000E0  7C 02			jl continue
  000000E2  EB 17			jmp endProc
 
+					; resave new string address and set a count to copy
  000000E4			continue:
  000000E4  8B C7			mov eax, edi
  000000E6  2B CA			sub ecx, edx
 					
+					; Segment to get current chars and check count for 0
  000000E8			nextChar:
  000000E8  8A 3C 32			mov bh, [esi + edx]
  000000EB  8A 1F			mov bl, [edi]
@@ -225,6 +271,7 @@ StringSet1.asm						     Page 1 - 1
  000000F0  7D 02			jge copy
  000000F2  EB 07			jmp endProc
 
+					; Segment to copy the contents
  000000F4			copy:
  000000F4  88 3F			mov [edi], bh
  000000F6  49				dec ecx
@@ -232,6 +279,7 @@ StringSet1.asm						     Page 1 - 1
  000000F8  47				inc edi
  000000F9  EB ED			jmp nextChar
 					
+					; Pop all used registers and return
  000000FB			endProc:
  000000FB  5A				pop edx
  000000FC  59				pop ecx
@@ -243,52 +291,64 @@ StringSet1.asm						     Page 1 - 1
  00000102			String_substring_1 endp
 
 				;== String_substring_2 =============================
-				; 
+				; Allocate memory for a new string and copy the 
+				;	contets of a source string into it based off 
+				;	given starting index
 				;===================================================
  00000102			String_substring_2 proc	
- = [ebp + 12]				ptrString equ [ebp + 12]
- = [ebp + 8]				beginIndex equ [ebp + 8]
+ = [ebp + 12]				ptrString equ [ebp + 12] ;string1
+ = [ebp + 8]				beginIndex equ [ebp + 8] ;start index
 					
+					; Push ebp ans save esp into ebp to use
  00000102  55				push ebp
  00000103  8B EC			mov ebp, esp
 					
+					; Push other registers to be used
  00000105  56				push esi
  00000106  57				push edi
  00000107  53				push ebx
  00000108  51				push ecx
 					
+					; Allocate new memory for new string 
 					invoke memoryallocBailey, 1000
  00000113  8B F8			mov edi, eax
 					
+					; Save string1 pointer and index into registers
  00000115  8B 75 0C			mov esi, ptrString
  00000118  8B 4D 08			mov ecx, beginIndex
 					
+					; Check if beginning index is less than 0
  0000011B  83 F9 00			cmp ecx, 0
  0000011E  7D 13			jge nextChar
  00000120  EB 23			jmp endProc
 					
+					; Get string length
  00000122  56				push esi
  00000123  E8 00000000 E		call String_length
  00000128  83 C4 04			add esp, 4
 					
+					; Check if Length is less thatn index
  0000012B  3B C8			cmp ecx, eax
  0000012D  8B C7			mov eax, edi
  0000012F  7C 02			jl nextChar
  00000131  EB 12			jmp endProc
 					
+					; Segment to check for end of string for source string
  00000133			nextChar:
  00000133  8A 3C 31			mov bh, [esi + ecx]
  00000136  8A 1F			mov bl, [edi]
  00000138  80 FF 00			cmp bh, 0
  0000013B  7D 02			jge copy
  0000013D  EB 06			jmp endProc
-
+					
+					; Segment to copy contents
  0000013F			copy:
  0000013F  88 3F			mov [edi], bh
  00000141  46				inc esi
  00000142  47				inc edi
  00000143  EB EE			jmp nextChar
 					
+					; Pop all used registers and return
  00000145			endProc:
  00000145  59				pop ecx
  00000146  5B				pop ebx
@@ -306,27 +366,35 @@ StringSet1.asm						     Page 1 - 1
  = [ebp + 12]				ptrString equ [ebp + 12]
  = [ebp + 8]				index equ[ebp + 8]
 					
+					; push ebp ans save esp into ebp to use
  0000014B  55				push ebp
  0000014C  8B EC			mov ebp, esp
 					
+					; Push other registers to be used
  0000014E  56				push esi
  0000014F  51				push ecx
  00000150  52				push edx
 					
+					; Set registers 
  00000151  BA 00000030			mov edx, '0'
  00000156  8B 75 0C			mov esi, ptrString
  00000159  8B 4D 08			mov ecx, index
- 0000015C  83 C1 01			add ecx, 1
+ 0000015C  83 C1 01			add ecx, 1	; must be incremented
 
+					; Get string length
  0000015F  FF 75 0C			push ptrString
  00000162  E8 00000000 E		call String_length
  00000167  83 C4 04			add esp, 4
 					
+					; Check if the index is greater than the lenght 
  0000016A  3B C1			cmp eax, ecx
  0000016C  7C 10			jl endProc
+					
+					; Check if the index is less than 0
  0000016E  83 F9 00			cmp ecx, 0
  00000171  7C 0B			jl endProc
 					
+					; Segment to check for count of 0 and save current char
  00000173			beginWhile:
  00000173  83 F9 00			cmp ecx, 0
  00000176  74 06			je endProc
@@ -335,6 +403,7 @@ StringSet1.asm						     Page 1 - 1
  0000017B  49				dec ecx
  0000017C  EB F5			jmp beginWhile
 					
+					; Resave eax and pop all used registers and return
  0000017E			endProc:
  0000017E  8B C2			mov eax, edx
 					
@@ -354,19 +423,23 @@ StringSet1.asm						     Page 1 - 1
  = [ebp + 12]				ptrSubString equ [ebp + 12]
  = [ebp + 8]				index equ[ebp + 8]
 					
+					; push ebp ans save esp into ebp to use
  00000185  55				push ebp
  00000186  8B EC			mov ebp, esp
 					
+					; Push other registers to be used
  00000188  56				push esi
  00000189  57				push edi
  0000018A  51				push ecx
  0000018B  53				push ebx
 					
+					; Set registers
  0000018C  B8 00000001			mov eax, 1
  00000191  8B 75 10			mov esi, ptrString
  00000194  8B 7D 0C			mov edi, ptrSubString
  00000197  8B 4D 08			mov ecx, index
 					
+					; Check for end of sting
  0000019A			nextChar:
  0000019A  8A 3C 31			mov bh, [esi + ecx]
  0000019D  8A 1F			mov bl, [edi]
@@ -374,13 +447,15 @@ StringSet1.asm						     Page 1 - 1
  000001A2  75 02			jne compare
  000001A4  EB 0B			jmp endProc
 
+					; Compare the chars and prep for next char
  000001A6			compare:
  000001A6  46				inc esi
  000001A7  47				inc edi
  000001A8  38 FB			cmp bl, bh
  000001AA  74 EE			je nextChar
  000001AC  B8 00000000			mov eax, 0
-
+					
+					; Pop all used registers and return
  000001B1			endProc:
  000001B1  5B				pop ebx
  000001B2  59				pop ecx
@@ -398,17 +473,21 @@ StringSet1.asm						     Page 1 - 1
  = [ebp + 12]				ptrString equ [ebp + 12]
  = [ebp + 8]				ptrSubString equ [ebp + 8]
 					
+					; push ebp ans save esp into ebp to use
  000001B7  55				push ebp
  000001B8  8B EC			mov ebp, esp
 					
+					; Push other registers to be used
  000001BA  56				push esi
  000001BB  57				push edi
  000001BC  53				push ebx
 					
+					; Set registers
  000001BD  B8 00000001			mov eax, 1
  000001C2  8B 75 0C			mov esi, ptrString
  000001C5  8B 7D 08			mov edi, ptrSubString
 					
+					; Check for end of string
  000001C8			nextChar:
  000001C8  8A 3E			mov bh, [esi]
  000001CA  8A 1F			mov bl, [edi]
@@ -416,13 +495,15 @@ StringSet1.asm						     Page 1 - 1
  000001CF  75 02			jne compare
  000001D1  EB 0B			jmp endProc
 
+					; Compare the chars and prep next char
  000001D3			compare:
  000001D3  46				inc esi
  000001D4  47				inc edi
  000001D5  38 FB			cmp bl, bh
  000001D7  74 EF			je nextChar
  000001D9  B8 00000000			mov eax, 0
-
+					
+					; Pop all used registers and return
  000001DE			endProc:
  000001DE  5B				pop ebx
  000001DF  5F				pop edi
@@ -439,35 +520,42 @@ StringSet1.asm						     Page 1 - 1
  = [ebp + 12]				ptrString equ [ebp + 12]
  = [ebp+ 8]				ptrSubString equ [ebp+ 8]
 					
+					; push ebp ans save esp into ebp to use
  000001E3  55				push ebp
  000001E4  8B EC			mov ebp, esp
 					
+					; Push other registers to be used
  000001E6  53				push ebx
  000001E7  51				push ecx
  000001E8  52				push edx
  000001E9  56				push esi
  000001EA  57				push edi
 					
+					; Set pointers registers
  000001EB  8B 75 0C			mov esi, ptrString
  000001EE  8B 7D 08			mov edi, ptrSubString	
 					
+					; Get string lenght and dec by 1 to get max index
  000001F1  56				push esi
  000001F2  E8 00000000 E		call String_length
  000001F7  83 C4 04			add esp, 4
  000001FA  8B C8			mov ecx, eax
  000001FC  49				dec ecx
 					
+					; Get substring length and get its max index
  000001FD  57				push edi
  000001FE  E8 00000000 E		call String_length
  00000203  83 C4 04			add esp, 4
  00000206  8B D0			mov edx, eax
  00000208  4A				dec edx
 					
+					; Check if the index is greater than the length
  00000209  3B D1			cmp edx, ecx
  0000020B  7C 07			jl nextChar
  0000020D  B8 00000000			mov eax, 0
  00000212  EB 1D			jmp endProc
 					
+					; Get chars and check fo end of string
  00000214			nextChar:	
  00000214  B8 00000001			mov eax, 1
  00000219  8A 3C 31			mov bh, [esi + ecx]
@@ -476,6 +564,7 @@ StringSet1.asm						     Page 1 - 1
  00000222  7D 02			jge compare
  00000224  EB 0B			jmp endProc
 
+					; Compare and decrement for nex char
  00000226			compare:
  00000226  49				dec ecx
  00000227  4A				dec edx
@@ -483,6 +572,7 @@ StringSet1.asm						     Page 1 - 1
  0000022A  74 E8			je nextChar
  0000022C  B8 00000000			mov eax, 0
 
+					; Pop all used registers and return
  00000231			endProc:	
  00000231  5F				pop edi
  00000232  5E				pop esi
@@ -514,7 +604,7 @@ StringSet1.asm						     Page 1 - 1
 
 
 
-Microsoft (R) Macro Assembler Version 6.14.8444		    04/19/18 10:20:13
+Microsoft (R) Macro Assembler Version 6.14.8444		    04/19/18 23:09:44
 StringSet1.asm						     Symbols 2 - 1
 
 

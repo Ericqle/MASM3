@@ -1,13 +1,22 @@
-Microsoft (R) Macro Assembler Version 6.14.8444		    04/19/18 10:20:13
+Microsoft (R) Macro Assembler Version 6.14.8444		    04/19/18 23:09:44
 MASM3.asm						     Page 1 - 1
 
 
-				; Author: 		Eric Le
+				;=====================================================================================
+				; Author: 		Eric Le, Sabrina Dang
 				; Assignment:	MASM3
 				; Class:		CS3B
 				; Date:			April 19, 2018
-				; Description:
+				; Description:	
+				;	This Program will implement two sets of string functions using
+				;	the c-calling convention. It will display a menue and the 
+				;	selected menue choice will then perform the given string 
+				;	function. It will aslo be updated at real time to show the
+				;	results of the functions
+				;=====================================================================================
 
+
+					; External libraries and macros
 					include ..\Irvine\Irvine32.inc
 			      C ; Include file for Irvine32.lib             (Irvine32.inc)
 			      C 
@@ -30,32 +39,55 @@ MASM3.asm						     Page 1 - 1
 					getstring	PROTO Near32 stdcall, lpStringToGet:dword, dlength:dword 	;macro to get user input
 					putstring 	PROTO Near32 stdcall, lpStringToPrint:dword 				;macro to print a string to console
 					
-					extern String_equals@0:				proc
-					extern String_equalsIgnoreCase@0:	proc
-					extern String_copy@0:				proc
-					extern String_substring_1@0:		proc
-					extern String_substring_2@0:		proc
-					extern String_charAt@0:				proc
-					extern String_startsWith_1@0:		proc
-					extern String_startsWith_2@0:		proc
-					extern String_endsWith@0:			proc
+					; External procedures
+					extern String_equals@0:				proc	;get external procedure String_equals
+					extern String_equalsIgnoreCase@0:	proc	;get external procedure String_equalsIgnoreCase
+					extern String_copy@0:				proc	;get external procedure String_copy
+					extern String_substring_1@0:		proc	;get external procedure String_substring_1
+					extern String_substring_2@0:		proc	;get external procedure String_substring_2
+					extern String_charAt@0:				proc	;get external procedure String_charAt
+					extern String_startsWith_1@0:		proc	;get external procedure String_startsWitch_1
+					extern String_startsWith_2@0:		proc	;get external procedure String_startsWith_2
+					extern String_endsWith@0:			proc	;get external procedure String_endsWith
+					extern String_indexOf_1@0:			proc	;get external procedure String_indexOf_1
+					extern String_indexOf_2@0:			proc	;get external procedure String_indexOf_2
+					extern String_indexOf_3@0:			proc	;get external procedure String_indexOf_3
+					extern String_lastIndexOf_1@0:		proc	;get external procedure String_lastIndexOf_1
+					extern String_lastIndexOf_2@0:		proc	;get external procedure String_lastIndexOf_2
+					extern String_lastIndexOf_3@0:		proc	;get external procedure String_lastIndexOf_3
+					extern String_concat@0:				proc	;get external procedure String_concat
+					extern String_replace@0:			proc	;get external procedure String_replace
+					extern String_toLowerCase@0:		proc	;get external procedure String_toLowerCase
+					extern String_toUpperCase@0:		proc	;get external procedure String_toUpperCase
 					
- = String_equals@0			String_equals 			equ String_equals@0
- = String_equalsIgnoreCase@		String_equalsIgnoreCase equ String_equalsIgnoreCase@0
+					; External Procedure Redefinitions
+ = String_equals@0			String_equals 			equ String_equals@0				
+ = String_equalsIgnoreCase@		String_equalsIgnoreCase equ String_equalsIgnoreCase@0	
    0
- = String_copy@0			String_copy 			equ String_copy@0
- = String_substring_1@0			String_substring_1 		equ String_substring_1@0
- = String_substring_2@0			String_substring_2 		equ String_substring_2@0
- = String_charAt@0			String_charAt 			equ String_charAt@0
- = String_startsWith_1@0		String_startsWith_1 	equ String_startsWith_1@0
- = String_startsWith_2@0		String_startsWith_2 	equ String_startsWith_2@0
- = String_endsWith@0			String_endsWith			equ String_endsWith@0
+ = String_copy@0			String_copy 			equ String_copy@0				
+ = String_substring_1@0			String_substring_1 		equ String_substring_1@0		
+ = String_substring_2@0			String_substring_2 		equ String_substring_2@0		
+ = String_charAt@0			String_charAt 			equ String_charAt@0				
+ = String_startsWith_1@0		String_startsWith_1 	equ String_startsWith_1@0		
+ = String_startsWith_2@0		String_startsWith_2 	equ String_startsWith_2@0		
+ = String_endsWith@0			String_endsWith			equ String_endsWith@0		
+ = String_indexOf_1@0			String_indexOf_1		equ String_indexOf_1@0
+ = String_indexOf_2@0			String_indexOf_2		equ String_indexOf_2@0
+ = String_indexOf_3@0			String_indexOf_3		equ String_indexOf_3@0
+ = String_lastIndexOf_1@0		String_lastIndexOf_1	equ String_lastIndexOf_1@0
+ = String_lastIndexOf_2@0		String_lastIndexOf_2	equ String_lastIndexOf_2@0
+ = String_lastIndexOf_3@0		String_lastIndexOf_3	equ String_lastIndexOf_3@0
+ = String_concat@0			String_concat			equ String_concat@0
+ = String_replace@0			String_replace			equ String_replace@0
+ = String_toLowerCase@0			String_toLowerCase		equ String_toLowerCase@0
+ = String_toUpperCase@0			String_toUpperCase		equ String_toUpperCase@0
 					
  00000000			.data
+					; All Menue Strings
  00000000 20 20 63 75 72		strCurrently		byte "  currently:",0
 	   72 65 6E 74 6C
 	   79 3A 00
- 0000000D 0A 0D 2A 2A 2A		strMenu1 			byte 10,13,"****************************************************",0
+ 0000000D 0A 0D 2A 2A 2A		strMenu1 			byte 10,13,"****************************************************",0	
 	   2A 2A 2A 2A 2A
 	   2A 2A 2A 2A 2A
 	   2A 2A 2A 2A 2A
@@ -66,7 +98,7 @@ MASM3.asm						     Page 1 - 1
 	   2A 2A 2A 2A 2A
 	   2A 2A 2A 2A 2A
 	   2A 2A 2A 2A 00
- 00000044 0A 0D 2A 20 20		strMenu2 			byte 10,13,"*                      MASM 3                      *",0
+ 00000044 0A 0D 2A 20 20		strMenu2 			byte 10,13,"*                      MASM 3                      *",0	
 	   20 20 20 20 20
 	   20 20 20 20 20
 	   20 20 20 20 20
@@ -77,7 +109,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 20
 	   20 20 20 20 20
 	   20 20 20 2A 00
- 0000007B 0A 0D 2A 2D 2D		strMenu3 			byte 10,13,"*--------------------------------------------------*",0
+ 0000007B 0A 0D 2A 2D 2D		strMenu3 			byte 10,13,"*--------------------------------------------------*",0	
 	   2D 2D 2D 2D 2D
 	   2D 2D 2D 2D 2D
 	   2D 2D 2D 2D 2D
@@ -88,7 +120,7 @@ MASM3.asm						     Page 1 - 1
 	   2D 2D 2D 2D 2D
 	   2D 2D 2D 2D 2D
 	   2D 2D 2D 2A 00
- 000000B2 0A 0D 2A 20 3C		strMenueChoice1 	byte 10,13,"* <1> Set string1                         currently:",0
+ 000000B2 0A 0D 2A 20 3C		strMenueChoice1 	byte 10,13,"* <1> Set string1                         currently:",0	
 	   31 3E 20 53 65
 	   74 20 73 74 72
 	   69 6E 67 31 20
@@ -99,7 +131,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 000000E9 0A 0D 2A 20 3C		strMenueChoice2 	byte 10,13,"* <2> Set string2                         currently:",0
+ 000000E9 0A 0D 2A 20 3C		strMenueChoice2 	byte 10,13,"* <2> Set string2                         currently:",0	
 	   32 3E 20 53 65
 	   74 20 73 74 72
 	   69 6E 67 32 20
@@ -110,7 +142,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 00000120 0A 0D 2A 20 3C		strMenueChoice3 	byte 10,13,"* <3> String_length                       currently:",0
+ 00000120 0A 0D 2A 20 3C		strMenueChoice3 	byte 10,13,"* <3> String_length                       currently:",0	
 	   33 3E 20 53 74
 	   72 69 6E 67 5F
 	   6C 65 6E 67 74
@@ -121,7 +153,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 00000157 0A 0D 2A 20 3C		strMenueChoice4 	byte 10,13,"* <4> String_equals                       currently:",0
+ 00000157 0A 0D 2A 20 3C		strMenueChoice4 	byte 10,13,"* <4> String_equals                       currently:",0	
 	   34 3E 20 53 74
 	   72 69 6E 67 5F
 	   65 71 75 61 6C
@@ -132,7 +164,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 0000018E 0A 0D 2A 20 3C		strMenueChoice5 	byte 10,13,"* <5> String_equalsIgnoreCas              currently:",0
+ 0000018E 0A 0D 2A 20 3C		strMenueChoice5 	byte 10,13,"* <5> String_equalsIgnoreCas              currently:",0	
 	   35 3E 20 53 74
 	   72 69 6E 67 5F
 	   65 71 75 61 6C
@@ -143,7 +175,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 000001C5 0A 0D 2A 20 3C		strMenueChoice6 	byte 10,13,"* <6> String_copy                         &",0
+ 000001C5 0A 0D 2A 20 3C		strMenueChoice6 	byte 10,13,"* <6> String_copy                         &",0			
 	   36 3E 20 53 74
 	   72 69 6E 67 5F
 	   63 6F 70 79 20
@@ -153,7 +185,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 20
 	   20 20 20 20 26
 	   00
- 000001F3 0A 0D 2A 20 3C		strMenueChoice7 	byte 10,13,"* <7> String_substring_1                  &",0
+ 000001F3 0A 0D 2A 20 3C		strMenueChoice7 	byte 10,13,"* <7> String_substring_1                  &",0			
 	   37 3E 20 53 74
 	   72 69 6E 67 5F
 	   73 75 62 73 74
@@ -163,7 +195,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 20
 	   20 20 20 20 26
 	   00
- 00000221 0A 0D 2A 20 3C		strMenueChoice8 	byte 10,13,"* <8> String_substring_2                  &",0
+ 00000221 0A 0D 2A 20 3C		strMenueChoice8 	byte 10,13,"* <8> String_substring_2                  &",0			
 	   38 3E 20 53 74
 	   72 69 6E 67 5F
 	   73 75 62 73 74
@@ -173,7 +205,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 20
 	   20 20 20 20 26
 	   00
- 0000024F 0A 0D 2A 20 3C		strMenueChoice9 	byte 10,13,"* <9> String_charAt                       currently:",0
+ 0000024F 0A 0D 2A 20 3C		strMenueChoice9 	byte 10,13,"* <9> String_charAt                       currently:",0	
 	   39 3E 20 53 74
 	   72 69 6E 67 5F
 	   63 68 61 72 41
@@ -184,7 +216,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 00000286 0A 0D 2A 20 3C		strMenueChoice10	byte 10,13,"* <10> String_startsWith_1                currently:",0
+ 00000286 0A 0D 2A 20 3C		strMenueChoice10	byte 10,13,"* <10> String_startsWith_1                currently:",0	
 	   31 30 3E 20 53
 	   74 72 69 6E 67
 	   5F 73 74 61 72
@@ -195,7 +227,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 000002BD 0A 0D 2A 20 3C		strMenueChoice11	byte 10,13,"* <11> String_startsWith_2                currently:",0
+ 000002BD 0A 0D 2A 20 3C		strMenueChoice11	byte 10,13,"* <11> String_startsWith_2                currently:",0	
 	   31 31 3E 20 53
 	   74 72 69 6E 67
 	   5F 73 74 61 72
@@ -206,7 +238,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 000002F4 0A 0D 2A 20 3C		strMenueChoice12	byte 10,13,"* <12> String_endsWith                    currently:",0
+ 000002F4 0A 0D 2A 20 3C		strMenueChoice12	byte 10,13,"* <12> String_endsWith                    currently:",0	
 	   31 32 3E 20 53
 	   74 72 69 6E 67
 	   5F 65 6E 64 73
@@ -217,7 +249,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 0000032B 0A 0D 2A 20 3C		strMenueChoice13	byte 10,13,"* <13> String_indexOf_1                   currently:",0
+ 0000032B 0A 0D 2A 20 3C		strMenueChoice13	byte 10,13,"* <13> String_indexOf_1                   currently:",0	
 	   31 33 3E 20 53
 	   74 72 69 6E 67
 	   5F 69 6E 64 65
@@ -228,7 +260,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 00000362 0A 0D 2A 20 3C		strMenueChoice14	byte 10,13,"* <14> String_indexOf_2                   currently:",0
+ 00000362 0A 0D 2A 20 3C		strMenueChoice14	byte 10,13,"* <14> String_indexOf_2                   currently:",0	
 	   31 34 3E 20 53
 	   74 72 69 6E 67
 	   5F 69 6E 64 65
@@ -239,7 +271,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 00000399 0A 0D 2A 20 3C		strMenueChoice15	byte 10,13,"* <15> String_indexOf_3                   currently:",0
+ 00000399 0A 0D 2A 20 3C		strMenueChoice15	byte 10,13,"* <15> String_indexOf_3                   currently:",0	
 	   31 35 3E 20 53
 	   74 72 69 6E 67
 	   5F 69 6E 64 65
@@ -250,7 +282,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 000003D0 0A 0D 2A 20 3C		strMenueChoice16	byte 10,13,"* <16> String_lastIndexOf_1               currently:",0
+ 000003D0 0A 0D 2A 20 3C		strMenueChoice16	byte 10,13,"* <16> String_lastIndexOf_1               currently:",0	
 	   31 36 3E 20 53
 	   74 72 69 6E 67
 	   5F 6C 61 73 74
@@ -261,7 +293,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 00000407 0A 0D 2A 20 3C		strMenueChoice17	byte 10,13,"* <17> String_lastIndexOf_2               currently:",0
+ 00000407 0A 0D 2A 20 3C		strMenueChoice17	byte 10,13,"* <17> String_lastIndexOf_2               currently:",0	
 	   31 37 3E 20 53
 	   74 72 69 6E 67
 	   5F 6C 61 73 74
@@ -272,7 +304,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 0000043E 0A 0D 2A 20 3C		strMenueChoice18	byte 10,13,"* <18> String_lastIndexOf_3               currently:",0
+ 0000043E 0A 0D 2A 20 3C		strMenueChoice18	byte 10,13,"* <18> String_lastIndexOf_3               currently:",0	
 	   31 38 3E 20 53
 	   74 72 69 6E 67
 	   5F 6C 61 73 74
@@ -283,7 +315,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 00000475 0A 0D 2A 20 3C		strMenueChoice19	byte 10,13,"* <19> String_concat                      currently:",0
+ 00000475 0A 0D 2A 20 3C		strMenueChoice19	byte 10,13,"* <19> String_concat                      currently:",0	
 	   31 39 3E 20 53
 	   74 72 69 6E 67
 	   5F 63 6F 6E 63
@@ -294,7 +326,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 000004AC 0A 0D 2A 20 3C		strMenueChoice20	byte 10,13,"* <20> String_replace                     currently:",0
+ 000004AC 0A 0D 2A 20 3C		strMenueChoice20	byte 10,13,"* <20> String_replace                     currently:",0	
 	   32 30 3E 20 53
 	   74 72 69 6E 67
 	   5F 72 65 70 6C
@@ -305,7 +337,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 000004E3 0A 0D 2A 20 3C		strMenueChoice21	byte 10,13,"* <21> String_toLowerCase                 currently:",0
+ 000004E3 0A 0D 2A 20 3C		strMenueChoice21	byte 10,13,"* <21> String_toLowerCase                 currently:",0	
 	   32 31 3E 20 53
 	   74 72 69 6E 67
 	   5F 74 6F 4C 6F
@@ -316,7 +348,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 0000051A 0A 0D 2A 20 3C		strMenueChoice22	byte 10,13,"* <22> String_toUpperCase                 currently:",0
+ 0000051A 0A 0D 2A 20 3C		strMenueChoice22	byte 10,13,"* <22> String_toUpperCase                 currently:",0	
 	   32 32 3E 20 53
 	   74 72 69 6E 67
 	   5F 74 6F 55 70
@@ -327,7 +359,7 @@ MASM3.asm						     Page 1 - 1
 	   20 20 20 20 63
 	   75 72 72 65 6E
 	   74 6C 79 3A 00
- 00000551 0A 0D 2A 20 3C		strMenueChoice23	byte 10,13,"* <23> Quit                                        *",0
+ 00000551 0A 0D 2A 20 3C		strMenueChoice23	byte 10,13,"* <23> Quit                                        *",0	
 	   32 33 3E 20 51
 	   75 69 74 20 20
 	   20 20 20 20 20
@@ -350,19 +382,20 @@ MASM3.asm						     Page 1 - 1
 	   2A 2A 2A 2A 2A
 	   2A 2A 2A 2A 00
 					
- 000005BF 0A 0D 43 68 6F		strChoicePrompt			byte 10,13,"Choice (1-23): ",0
+					; All Menue Prompts
+ 000005BF 0A 0D 43 68 6F		strChoicePrompt			byte 10,13,"Choice (1-23): ",0											
 	   69 63 65 20 28
 	   31 2D 32 33 29
 	   3A 20 00
- 000005D1 0A 0D 45 6E 74		strGetString1Prompt		byte 10,13,"Enter String 1: ",0
+ 000005D1 0A 0D 45 6E 74		strGetString1Prompt		byte 10,13,"Enter String 1: ",0											
 	   65 72 20 53 74
 	   72 69 6E 67 20
 	   31 3A 20 00
- 000005E4 0A 0D 45 6E 74		strGetString2Prompt		byte 10,13,"Enter String 2: ",0
+ 000005E4 0A 0D 45 6E 74		strGetString2Prompt		byte 10,13,"Enter String 2: ",0											
 	   65 72 20 53 74
 	   72 69 6E 67 20
 	   32 3A 20 00
- 000005F7 0A 0D 57 68 69		strLengthPrompt			byte 10,13,"Which String Would you like the Lenght of (1) or (2): ",0
+ 000005F7 0A 0D 57 68 69		strLengthPrompt			byte 10,13,"Which String Would you like the Lenght of (1) or (2): ",0	
 	   63 68 20 53 74
 	   72 69 6E 67 20
 	   57 6F 75 6C 64
@@ -374,7 +407,7 @@ MASM3.asm						     Page 1 - 1
 	   31 29 20 6F 72
 	   20 28 32 29 3A
 	   20 00
- 00000630 0A 0D 45 6E 74		strSubString1Prompt1	byte 10,13,"Enter the beginning index for the substring: ",0
+ 00000630 0A 0D 45 6E 74		strSubString1Prompt1	byte 10,13,"Enter the beginning index for the substring: ",0			
 	   65 72 20 74 68
 	   65 20 62 65 67
 	   69 6E 6E 69 6E
@@ -384,7 +417,7 @@ MASM3.asm						     Page 1 - 1
 	   20 73 75 62 73
 	   74 72 69 6E 67
 	   3A 20 00
- 00000660 0A 0D 45 6E 74		strSubString1Prompt2	byte 10,13,"Enter the ending index for the substring: ",0
+ 00000660 0A 0D 45 6E 74		strSubString1Prompt2	byte 10,13,"Enter the ending index for the substring: ",0				
 	   65 72 20 74 68
 	   65 20 65 6E 64
 	   69 6E 67 20 69
@@ -393,7 +426,7 @@ MASM3.asm						     Page 1 - 1
 	   68 65 20 73 75
 	   62 73 74 72 69
 	   6E 67 3A 20 00
- 0000068D 0A 0D 45 6E 74		strSubString2Prompt 	byte 10,13,"Enter the staring index for the substring: ",0
+ 0000068D 0A 0D 45 6E 74		strSubString2Prompt 	byte 10,13,"Enter the staring index for the substring: ",0				
 	   65 72 20 74 68
 	   65 20 73 74 61
 	   72 69 6E 67 20
@@ -403,7 +436,7 @@ MASM3.asm						     Page 1 - 1
 	   75 62 73 74 72
 	   69 6E 67 3A 20
 	   00
- 000006BB 0A 0D 45 6E 74		strCharAtPrompt			byte 10,13,"Enter the index of the wanted character: ",0
+ 000006BB 0A 0D 45 6E 74		strCharAtPrompt			byte 10,13,"Enter the index of the wanted character: ",0				
 	   65 72 20 74 68
 	   65 20 69 6E 64
 	   65 78 20 6F 66
@@ -412,7 +445,7 @@ MASM3.asm						     Page 1 - 1
 	   64 20 63 68 61
 	   72 61 63 74 65
 	   72 3A 20 00
- 000006E7 0A 0D 45 6E 74		strSW1Prompt			byte 10,13,"Enter the start index for the check: ",0 
+ 000006E7 0A 0D 45 6E 74		strSW1Prompt			byte 10,13,"Enter the start index for the check: ",0 				
 	   65 72 20 74 68
 	   65 20 73 74 61
 	   72 74 20 69 6E
@@ -420,561 +453,1060 @@ MASM3.asm						     Page 1 - 1
 	   6F 72 20 74 68
 	   65 20 63 68 65
 	   63 6B 3A 20 00
- 0000070F 4E 55 4C 4C 00		strNull	 byte "NULL",0
- 00000714 54 52 55 45 00		strTrue	 byte "TRUE",0
- 00000719 46 41 4C 53 45		strFalse byte "FALSE",0
+					
+ 0000070F 0A 0D 45 6E 74		strIndexOf1Prompt 		byte 10,13,"Enter the char to find the first instance of: ",0
+	   65 72 20 74 68
+	   65 20 63 68 61
+	   72 20 74 6F 20
+	   66 69 6E 64 20
+	   74 68 65 20 66
+	   69 72 73 74 20
+	   69 6E 73 74 61
+	   6E 63 65 20 6F
+	   66 3A 20 00
+ 00000740 0A 0D 45 6E 74		strIndexOf2Prompt1		byte 10,13,"Enter the char to find the first instance of: ",0
+	   65 72 20 74 68
+	   65 20 63 68 61
+	   72 20 74 6F 20
+	   66 69 6E 64 20
+	   74 68 65 20 66
+	   69 72 73 74 20
+	   69 6E 73 74 61
+	   6E 63 65 20 6F
+	   66 3A 20 00
+ 00000771 0A 0D 45 6E 74		strIndexOf2Prompt2		byte 10,13,"Enter the starting index: ",0
+	   65 72 20 74 68
+	   65 20 73 74 61
+	   72 74 69 6E 67
+	   20 69 6E 64 65
+	   78 3A 20 00
+ 0000078E 0A 0D 45 6E 74		strLIndexOf1Prompt 		byte 10,13,"Enter the char to find the last instance of: ",0
+	   65 72 20 74 68
+	   65 20 63 68 61
+	   72 20 74 6F 20
+	   66 69 6E 64 20
+	   74 68 65 20 6C
+	   61 73 74 20 69
+	   6E 73 74 61 6E
+	   63 65 20 6F 66
+	   3A 20 00
+ 000007BE 0A 0D 45 6E 74		strLIndexOf2Prompt1		byte 10,13,"Enter the char to find the last instance of: ",0
+	   65 72 20 74 68
+	   65 20 63 68 61
+	   72 20 74 6F 20
+	   66 69 6E 64 20
+	   74 68 65 20 6C
+	   61 73 74 20 69
+	   6E 73 74 61 6E
+	   63 65 20 6F 66
+	   3A 20 00
+ 000007EE 0A 0D 45 6E 74		strLIndexOf2Prompt2		byte 10,13,"Enter the starting index: ",0
+	   65 72 20 74 68
+	   65 20 73 74 61
+	   72 74 69 6E 67
+	   20 69 6E 64 65
+	   78 3A 20 00
+ 0000080B 0A 0D 57 68 69		strReplacePrompt1		byte 10,13,"Which string would you like to replace the characters of: ",0
+	   63 68 20 73 74
+	   72 69 6E 67 20
+	   77 6F 75 6C 64
+	   20 79 6F 75 20
+	   6C 69 6B 65 20
+	   74 6F 20 72 65
+	   70 6C 61 63 65
+	   20 74 68 65 20
+	   63 68 61 72 61
+	   63 74 65 72 73
+	   20 6F 66 3A 20
 	   00
- 0000071F 30 30 30 30 30		strZeros byte "00000000",0
+ 00000848 0A 0D 4C 65 74		strReplacePrompt2		byte 10,13,"Letter to replace: ",0
+	   74 65 72 20 74
+	   6F 20 72 65 70
+	   6C 61 63 65 3A
+	   20 00
+ 0000085E 0A 0D 4C 65 74		strReplacePrompt3		byte 10,13,"Letter to insert: ",0
+	   74 65 72 20 74
+	   6F 20 69 6E 73
+	   65 72 74 3A 20
+	   00
+ 00000873 0A 0D 57 68 69		strToLowerPrompt		byte 10,13,"Which string would you like to make lowercase: ",0
+	   63 68 20 73 74
+	   72 69 6E 67 20
+	   77 6F 75 6C 64
+	   20 79 6F 75 20
+	   6C 69 6B 65 20
+	   74 6F 20 6D 61
+	   6B 65 20 6C 6F
+	   77 65 72 63 61
+	   73 65 3A 20 00
+ 000008A5 0A 0D 57 68 69		strToHigherPrompt		byte 10,13,"Which string would you like to make uppercase: ",0
+	   63 68 20 73 74
+	   72 69 6E 67 20
+	   77 6F 75 6C 64
+	   20 79 6F 75 20
+	   6C 69 6B 65 20
+	   74 6F 20 6D 61
+	   6B 65 20 75 70
+	   70 65 72 63 61
+	   73 65 3A 20 00
+
+					; Additional Ouputs
+ 000008D7 4E 55 4C 4C 00		strNull	 byte "NULL",0		;string to rep null
+ 000008DC 54 52 55 45 00		strTrue	 byte "TRUE",0		;string to rep true
+ 000008E1 46 41 4C 53 45		strFalse byte "FALSE",0		;string to rep false
+	   00
+ 000008E7 30 30 30 30 30		strZeros byte "00000000",0	;string to rep blank address
 	   30 30 30 00
- 00000728 0A 0D 00			strNewline 	byte 10,13,0
+ 000008F0 0A 0D 00			strNewline 	byte 10,13,0	;sting to rep newLine
 					
- 0000072B  0000001E [			string1 	byte 30 dup(?)
+					; Strings to hold string1 and string2
+ 000008F3  0000001E [			string1 	byte 30 dup(?)	;string to hold string1
 	    00
 	   ]
- 00000749  0000001E [			string2 	byte 30 dup (?)
-	    00
-	   ]
- 00000767  00000014 [			subString 	byte 20 dup (?)
+ 00000911  0000001E [			string2 	byte 30 dup (?)	;string to hols string2
 	    00
 	   ]
 					
- 0000077B 00000000			status1			dword 0
- 0000077F 00000000			status2			dword 0
- 00000783 00000000			status3 		dword 0
- 00000787 00000000			status4 		dword 0
- 0000078B 00000000			status5 		dword 0
+					; Sataus for Menue Items
+ 0000092F 00000000			status1			dword 0	;contains address of string1		
+ 00000933 00000000			status2			dword 0	;contains address of string2
+ 00000937 00000000			status3 		dword 0	;contains int value of lenght
+ 0000093B 00000000			status4 		dword 0	;contains address of string rep true or false
+ 0000093F 00000000			status5 		dword 0 ;contains address of string rep true or false
+ 00000943 00000000			statusAddress6 	dword 0	;contians address of string
+ 00000947 00000000			status6 		dword 0 ;contains address of string rep of null or copy sring
+ 0000094B 00000000			statusAddress7 	dword 0 ;contians address of string
+ 0000094F 00000000			status7 		dword 0 ;contains address of string rep of null or subSring
+ 00000953 00000000			statusAddress8  dword 0 ;contians address of string
+ 00000957 00000000			status8			dword 0	;contains address of string rep of null or subSring
+ 0000095B 00000000			status9			dword 0	;contains char value or address of string rep of null
+ 0000095F 00000000			status10		dword 0	;contains address of string rep true or false
+ 00000963 00000000			status11		dword 0	;contains address of string rep true or false
+ 00000967 00000000			status12		dword 0	;contains address of string rep true or false
 					
- 0000078F 00000000			statusAddress6 	dword 0
- 00000793 00000000			status6 		dword 0
+ 0000096B 00000000			status13	 	dword 0	;contains int of string indexof 1
+ 0000096F 00000000			status14	 	dword 0 ;contains int of string indexof 2
+ 00000973 00000000			status15	 	dword 0 ;contains int of string indexof 3
+ 00000977 00000000			status16	 	dword 0 ;contains int of string last indexof 1
+ 0000097B 00000000			status17	 	dword 0 ;contains int of string last indexof 2
+ 0000097F 00000000			status18	 	dword 0 ;contains int of string last indexof 3
+ 00000983 00000000			status19	 	dword 0 ;contains address of string concat 
+ 00000987 00000000			status20	 	dword 0 ;contains address of string replace
+ 0000098B 00000000			status21	 	dword 0	;contains address of string toLower
+ 0000098F 00000000			status22	 	dword 0 ;contains address of string toUpper
 					
- 00000797 00000000			statusAddress7 	dword 0
- 0000079B 00000000			status7 		dword 0
-					
- 0000079F 00000000			statusAddress8  dword 0
- 000007A3 00000000			status8			dword 0
-					
- 000007A7 00000000			status9			dword 0
- 000007AB 00000000			status10		dword 0
- 000007AF 00000000			status11		dword 0
- 000007B3 00000000			status12		dword 0
-					
- 000007B7  0000000A [			strChoice	byte 10 dup(?)
+					; Items to Hold Prompt Decisions
+ 00000993  0000000A [			strChoice	byte 10 dup(?)			;item to hold str menue choice
 	    00
 	   ]
- 000007C1 00000000			choice 		dword 0
+ 0000099D  0000000A [			strLengthChoice		byte 10 dup(?)	;itme to hold str length choice
+	    00
+	   ]
+ 000009A7 00000000			lengthChoice 		dword 0			;item to hold int length choice
+ 000009AB  0000000A [			strSS1Begin	byte 10 dup(?)			;item to hold ss1 start index 
+	    00
+	   ]
+ 000009B5  0000000A [			strSS1End	byte 10 dup(?)			;item to hold ss1 end index
+	    00
+	   ]
+ 000009BF  0000000A [			strSS2Begin	byte 10 dup(?)			;item to hold ss2 begin index
+	    00
+	   ]
+ 000009C9  0000000A [			strCharAtIndex 	byte 10 dup(?)		;item to hold chaAt index
+	    00
+	   ]
+ 000009D3  0000000A [			strSW1Index		byte 10 dup(?)		;itme to hold sw1 index
+	    00
+	   ]
 					
- 000007C5  0000000A [			strLengthChoice		byte 10 dup(?)
+ 000009DD  0000000A [			strIO1Choice	byte 10 dup(?)		;item to hold index of choice
 	    00
 	   ]
- 000007CF 00000000			lengthChoice 		dword 0
-					
- 000007D3  0000000A [			strSS1Begin	byte 10 dup(?)
+ 000009E7  0000000A [			strIO2Choice1	byte 10 dup(?)		;item to hold index of2 choice1
 	    00
 	   ]
- 000007DD  0000000A [			strSS1End	byte 10 dup(?)	
+ 000009F1  0000000A [			strIO2Choice2	byte 10 dup(?)		;item to hold index of2 choice2
 	    00
 	   ]
- 000007E7  0000000A [			strSS2Begin	byte 10 dup(?)
+ 000009FB  0000000A [			strLIO1Choice	byte 10 dup(?)		;item to hold last index choice
 	    00
 	   ]
- 000007F1  0000000A [			strCharAtIndex 	byte 10 dup(?)	
+ 00000A05  0000000A [			strLIO2Choice1	byte 10 dup(?)		;item to hold last index2 choice1
 	    00
 	   ]
- 000007FB  0000000A [			strSW1Index		byte 10 dup(?)
+ 00000A0F  0000000A [			strLIO2Choice2	byte 10 dup(?)		;item to hold last index2 choice2
+	    00
+	   ]
+ 00000A19  0000000A [			strReplaceChoice byte 10 dup(?)		;item to hold replace choice
+	    00
+	   ]
+ 00000A23  0000000A [			strReplaceChar1 byte 10 dup(?)		;item to hold replace char1
+	    00
+	   ]
+ 00000A2D  0000000A [			strReplaceChar2 byte 10 dup(?)		;item to hold replace char2
+	    00
+	   ]
+ 00000A37  0000000A [			strLowerCaseChoice byte 10 dup(?)	;item to hold lowercase choice
+	    00
+	   ]
+ 00000A41  0000000A [			strUpperCaseChoice byte 10 dup(?)	;item to hols uppercase choice
 	    00
 	   ]
 					
  00000000			.code
  00000000			main PROC
- 00000000  E8 0000064C			call initialize
+ 00000000  E8 00000903			call initialize		;initialize default values for menue
  00000005			start:	
- 00000005  B8 00000000			mov eax, 0
- 0000000A  E8 000003D4			call Print_Menu
-					invoke getString, 	addr strChoice, 10
-					invoke ascint32, 	addr strChoice
- 00000025  A3 000007C1 R		mov choice, eax
+ 00000005  B8 00000000			mov eax, 0								;reset eax
+ 0000000A  E8 00000623			call Print_Menu							;print the menue
+					invoke getString, 	addr strChoice, 10	;get choice from user
+					invoke ascint32, 	addr strChoice		;convert choice to int choice
 					
- 0000002A  83 F8 01			cmp eax, 1
- 0000002D  0F 84 000000CB		je choice1
- 00000033  83 F8 02			cmp eax, 2
- 00000036  0F 84 000000E7		je choice2
- 0000003C  83 F8 03			cmp eax, 3
- 0000003F  0F 84 00000103		je choice3
- 00000045  83 F8 04			cmp eax, 4
- 00000048  0F 84 00000142		je choice4
- 0000004E  83 F8 05			cmp eax, 5
- 00000051  0F 84 00000169		je choice5
- 00000057  83 F8 06			cmp eax, 6
- 0000005A  0F 84 00000190		je choice6
- 00000060  83 F8 07			cmp eax, 7
- 00000063  0F 84 000001A3		je choice7
- 00000069  83 F8 08			cmp eax, 8
- 0000006C  0F 84 000001F8		je choice8
- 00000072  83 F8 09			cmp eax, 9
- 00000075  0F 84 0000022C		je choice9
- 0000007B  83 F8 0A			cmp eax, 10
- 0000007E  0F 84 0000025B		je choice10
- 00000084  83 F8 0B			cmp eax, 11
- 00000087  0F 84 000002A3		je choice11
- 0000008D  83 F8 0C			cmp eax, 12
- 00000090  0F 84 000002CA		je choice12
- 00000096  83 F8 0D			cmp eax, 13
- 00000099  0F 84 000002F1		je choice13
- 0000009F  83 F8 0E			cmp eax, 14
- 000000A2  0F 84 000002ED		je choice14
- 000000A8  83 F8 0F			cmp eax, 15
- 000000AB  0F 84 000002E9		je choice15
- 000000B1  83 F8 10			cmp eax, 16
- 000000B4  0F 84 000002E5		je choice16
- 000000BA  83 F8 11			cmp eax, 17
- 000000BD  0F 84 000002E1		je choice17
- 000000C3  83 F8 12			cmp eax, 18
- 000000C6  0F 84 000002DD		je choice18
- 000000CC  83 F8 13			cmp eax, 19
- 000000CF  0F 84 000002D9		je choice19
- 000000D5  83 F8 14			cmp eax, 20
- 000000D8  0F 84 000002D5		je choice20
- 000000DE  83 F8 15			cmp eax, 21
- 000000E1  0F 84 000002D1		je choice21
- 000000E7  83 F8 16			cmp eax, 22
- 000000EA  0F 84 000002CD		je choice22
- 000000F0  83 F8 17			cmp eax, 23
- 000000F3  0F 84 000002C9		je choice23
- 000000F9  E9 FFFFFF07			jmp start
+					; Compare and find the instruction to go to based on menue choice
+ 00000025  83 F8 01			cmp eax, 1
+ 00000028  0F 84 000000CB		je choice1
+ 0000002E  83 F8 02			cmp eax, 2
+ 00000031  0F 84 000000E7		je choice2
+ 00000037  83 F8 03			cmp eax, 3
+ 0000003A  0F 84 00000103		je choice3
+ 00000040  83 F8 04			cmp eax, 4
+ 00000043  0F 84 00000142		je choice4
+ 00000049  83 F8 05			cmp eax, 5
+ 0000004C  0F 84 00000169		je choice5
+ 00000052  83 F8 06			cmp eax, 6
+ 00000055  0F 84 00000190		je choice6
+ 0000005B  83 F8 07			cmp eax, 7
+ 0000005E  0F 84 000001A3		je choice7
+ 00000064  83 F8 08			cmp eax, 8
+ 00000067  0F 84 000001F8		je choice8
+ 0000006D  83 F8 09			cmp eax, 9
+ 00000070  0F 84 0000022C		je choice9
+ 00000076  83 F8 0A			cmp eax, 10
+ 00000079  0F 84 0000025B		je choice10
+ 0000007F  83 F8 0B			cmp eax, 11
+ 00000082  0F 84 000002A3		je choice11
+ 00000088  83 F8 0C			cmp eax, 12
+ 0000008B  0F 84 000002CA		je choice12
+ 00000091  83 F8 0D			cmp eax, 13
+ 00000094  0F 84 000002F1		je choice13
+ 0000009A  83 F8 0E			cmp eax, 14
+ 0000009D  0F 84 00000320		je choice14
+ 000000A3  83 F8 0F			cmp eax, 15
+ 000000A6  0F 84 00000370		je choice15
+ 000000AC  83 F8 10			cmp eax, 16
+ 000000AF  0F 84 00000383		je choice16
+ 000000B5  83 F8 11			cmp eax, 17
+ 000000B8  0F 84 000003B2		je choice17
+ 000000BE  83 F8 12			cmp eax, 18
+ 000000C1  0F 84 00000402		je choice18
+ 000000C7  83 F8 13			cmp eax, 19
+ 000000CA  0F 84 00000415		je choice19
+ 000000D0  83 F8 14			cmp eax, 20
+ 000000D3  0F 84 00000428		je choice20
+ 000000D9  83 F8 15			cmp eax, 21
+ 000000DC  0F 84 0000049F		je choice21
+ 000000E2  83 F8 16			cmp eax, 22
+ 000000E5  0F 84 000004DE		je choice22
+ 000000EB  83 F8 17			cmp eax, 23
+ 000000EE  0F 84 0000051D		je choice23
+ 000000F4  E9 FFFFFF0C			jmp start
 
- 000000FE			choice1:
+				;------- Get String1 ---------------------------------------
+				;	Prompt for and recieve input for string1
+				;-----------------------------------------------------------
+ 000000F9			choice1:
 					invoke putString, addr strGetString1Prompt
 					invoke getString, addr string1, 29
- 00000114  C7 05 0000077B R		mov status1, offset string1
-	   0000072B R
- 0000011E  E9 FFFFFEE2			jmp start
-					
- 00000123			choice2:
+ 0000010F  C7 05 0000092F R		mov status1, offset string1
+	   000008F3 R
+ 00000119  E9 FFFFFEE7			jmp start
+
+				;------- Get String2 ---------------------------------------
+				;	Prompt for and recieve input for string
+				;-----------------------------------------------------------
+ 0000011E			choice2:
 					invoke putString, addr strGetString2Prompt
 					invoke getString, addr string2, 29
- 00000139  C7 05 0000077F R		mov status2, offset string2
-	   00000749 R
- 00000143  E9 FFFFFEBD			jmp start
+ 00000134  C7 05 00000933 R		mov status2, offset string2
+	   00000911 R
+ 0000013E  E9 FFFFFEC2			jmp start
 					
- 00000148			choice3:
-					;String_length(string1:String):int 
+				;------- Call String_length --------------------------------
+				;	call String_length using c-calling convention
+				;-----------------------------------------------------------
+ 00000143			choice3:
+					; Prompt for choice to find lenght of string1 or string2
 					invoke putString, offset strLengthPrompt
 					invoke getString, 	addr strChoice, 10
 					invoke ascint32, 	addr strChoice
- 00000168  83 F8 01			cmp eax, 1
- 0000016B  75 07			jne continue3
- 0000016D  68 0000072B R		push offset string1
- 00000172  EB 0A			jmp continue3_2
- 00000174			continue3:
- 00000174  83 F8 02			cmp eax, 2
- 00000177  75 12			jne noChoice
- 00000179  68 00000749 R		push offset string2
- 0000017E			continue3_2:
+					
+					; Use string1
+ 00000163  83 F8 01			cmp eax, 1
+ 00000166  75 07			jne continue3
+ 00000168  68 000008F3 R		push offset string1
+ 0000016D  EB 0A			jmp continue3_2
+					
+					; Use string2
+ 0000016F			continue3:
+ 0000016F  83 F8 02			cmp eax, 2
+ 00000172  75 12			jne noChoice
+ 00000174  68 00000911 R		push offset string2
+					
+					; String_length(string1:String):int 
+ 00000179			continue3_2:
+ 00000179  E8 0000049C			call String_length
+ 0000017E  83 C4 04			add esp, 4
+					
+					; Update status for menu
+ 00000181  A3 00000937 R		mov status3, eax
+					
+ 00000186			noChoice:
+ 00000186  E9 FFFFFE7A			jmp start
+					
+				;------- Call String_equals --------------------------------
+				;	call String_equals using c-calling convention
+				;-----------------------------------------------------------
+ 0000018B			choice4:
+					; String_equals(string1:String,string2:String):boolean 
+ 0000018B  68 000008F3 R		push offset string1
+ 00000190  68 00000911 R		push offset string2
+ 00000195  E8 00000000 E		call String_equals
+ 0000019A  83 C4 08			add esp, 8
+					
+					; Update status for the menu
+ 0000019D  83 F8 01			cmp eax, 1
+ 000001A0  C7 05 0000093B R		mov status4, offset strFalse
+	   000008E1 R
+ 000001AA  75 0A			jne continue4
+ 000001AC  C7 05 0000093B R		mov status4, offset strTrue
+	   000008DC R
+ 000001B6			continue4:
+ 000001B6  E9 FFFFFE4A			jmp start
 
- 0000017E  E8 00000248			call String_length
- 00000183  83 C4 04			add esp, 4
- 00000186  A3 00000783 R		mov status3, eax
+				;------- Call String_equalsIgnoreCase ----------------------
+				;	call String_equalsIgnoreCase using c-calling convention
+				;-----------------------------------------------------------
+ 000001BB			choice5:
+					; String_equalsIgnoreCase(string1:String,string2:String):boolean 
+ 000001BB  68 000008F3 R		push offset string1
+ 000001C0  68 00000911 R		push offset string2
+ 000001C5  E8 00000000 E		call String_equalsIgnoreCase
+ 000001CA  83 C4 08			add esp, 8
 					
- 0000018B			noChoice:
- 0000018B  E9 FFFFFE75			jmp start
-					
- 00000190			choice4:
-					;String_equals(string1:String,string2:String):boolean 
- 00000190  68 0000072B R		push offset string1
- 00000195  68 00000749 R		push offset string2
- 0000019A  E8 00000000 E		call String_equals
- 0000019F  83 C4 08			add esp, 8
-					
- 000001A2  83 F8 01			cmp eax, 1
- 000001A5  C7 05 00000787 R		mov status4, offset strFalse
-	   00000719 R
- 000001AF  75 0A			jne continue4
- 000001B1  C7 05 00000787 R		mov status4, offset strTrue
-	   00000714 R
- 000001BB			continue4:
- 000001BB  E9 FFFFFE45			jmp start
+					; Update status for the menu
+ 000001CD  83 F8 01			cmp eax, 1
+ 000001D0  C7 05 0000093F R		mov status5, offset strFalse
+	   000008E1 R
+ 000001DA  75 0A			jne continue5
+ 000001DC  C7 05 0000093F R		mov status5, offset strTrue
+	   000008DC R
+ 000001E6			continue5:
+ 000001E6  E9 FFFFFE1A			jmp start
 
- 000001C0			choice5:
-					;String_equalsIgnoreCase(string1:String,string2:String):boolean 
- 000001C0  68 0000072B R		push offset string1
- 000001C5  68 00000749 R		push offset string2
- 000001CA  E8 00000000 E		call String_equalsIgnoreCase
- 000001CF  83 C4 08			add esp, 8
+				;------- Call String_copy ---------------------------------
+				;	call String_copy using c-calling convention
+				;-----------------------------------------------------------
+ 000001EB			choice6:
+					; String_copy(string1:String) :string
+ 000001EB  68 000008F3 R		push offset string1
+ 000001F0  E8 00000000 E		call String_copy
+ 000001F5  83 C4 04			add esp, 4
 					
- 000001D2  83 F8 01			cmp eax, 1
- 000001D5  C7 05 0000078B R		mov status5, offset strFalse
-	   00000719 R
- 000001DF  75 0A			jne continue5
- 000001E1  C7 05 0000078B R		mov status5, offset strTrue
-	   00000714 R
- 000001EB			continue5:
- 000001EB  E9 FFFFFE15			jmp start
+					; Update status for menu
+ 000001F8  A3 00000947 R		mov status6, eax
+ 000001FD  A3 00000943 R		mov statusAddress6, eax
+ 00000202  E9 FFFFFDFE			jmp start
 
- 000001F0			choice6:
-					;String_copy(string1:String) :string
- 000001F0  68 0000072B R		push offset string1
- 000001F5  E8 00000000 E		call String_copy
- 000001FA  83 C4 04			add esp, 4
+				;------- Call String_substring_1 ---------------------------
+				;	call String_substring_1 using c-calling convention
+				;-----------------------------------------------------------
+ 00000207			choice7:
+ 00000207  68 000008F3 R		push offset string1
 					
- 000001FD  A3 00000793 R		mov status6, eax
- 00000202  A3 0000078F R		mov statusAddress6, eax
- 00000207  E9 FFFFFDF9			jmp start
-
- 0000020C			choice7:
-					;String_substring_1(string:String ,begin Index:int,endIndex:int):string
- 0000020C  68 0000072B R		push offset string1
-					
+					; Prompt for and recieve beginning index
 					invoke putString, addr strSubString1Prompt1
 					invoke getString, addr strSS1Begin, 10
 					invoke ascint32,  addr strSS1Begin
- 00000231  50				push eax
+ 0000022C  50				push eax
 					
+					; Prompt for and recieve ending index
 					invoke putString, addr strSubString1Prompt2
 					invoke getString, addr strSS1End, 10
 					invoke ascint32,  addr strSS1End
- 00000252  50				push eax
+ 0000024D  50				push eax
 					
- 00000253  E8 00000000 E		call String_substring_1
- 00000258  83 C4 0C			add esp, 12
+					; String_substring_1(string:String ,begin Index:int,endIndex:int):string
+ 0000024E  E8 00000000 E		call String_substring_1
+ 00000253  83 C4 0C			add esp, 12
 					
- 0000025B  A3 0000079B R		mov status7, eax
- 00000260  A3 00000797 R		mov statusAddress7, eax
- 00000265  E9 FFFFFD9B			jmp start
+					; Update status for menu
+ 00000256  A3 0000094F R		mov status7, eax
+ 0000025B  A3 0000094B R		mov statusAddress7, eax
+ 00000260  E9 FFFFFDA0			jmp start
 
- 0000026A			choice8:
-					;String_substring_2(string:String ,begin Index:int):string
- 0000026A  68 0000072B R		push offset string1
+				;------- Call String_substring_2 ---------------------------
+				;	call String_substring_2 using c-calling convention
+				;-----------------------------------------------------------
+ 00000265			choice8:
+ 00000265  68 000008F3 R		push offset string1
 					
+					; Prompt for beginning index
 					invoke putString, addr strSubString2Prompt
 					invoke getString, addr strSS2Begin, 10
 					invoke ascint32,  addr strSS2Begin
- 0000028F  50				push eax
+ 0000028A  50				push eax
 					
- 00000290  E8 00000000 E		call String_substring_2
- 00000295  83 C4 08			add esp, 8
+					; String_substring_2(string:String ,begin Index:int):string
+ 0000028B  E8 00000000 E		call String_substring_2
+ 00000290  83 C4 08			add esp, 8
 					
- 00000298  A3 000007A3 R		mov status8, eax
- 0000029D  A3 0000079F R		mov statusAddress8, eax
- 000002A2  E9 FFFFFD5E			jmp start
+					; Update status for menu
+ 00000293  A3 00000957 R		mov status8, eax
+ 00000298  A3 00000953 R		mov statusAddress8, eax
+ 0000029D  E9 FFFFFD63			jmp start
 
- 000002A7			choice9:
-					;String_charAt(string1:String,position:int):char byte
- 000002A7  68 0000072B R		push offset string1
+				;------- Call String_charAt --------------------------------
+				;	call String_charAt using c-calling convention
+				;-----------------------------------------------------------
+ 000002A2			choice9:
+ 000002A2  68 000008F3 R		push offset string1
 					
+					; Prompt and recieve index for wanted char
 					invoke putString, addr strCharAtPrompt
 					invoke getString, addr strCharAtIndex, 10
 					invoke ascint32,  addr strCharAtIndex
- 000002CC  50				push eax
+ 000002C7  50				push eax
 					
- 000002CD  E8 00000000 E		call String_charAt
- 000002D2  83 C4 08			add esp, 8
+					; String_charAt(string1:String,position:int):char byte
+ 000002C8  E8 00000000 E		call String_charAt
+ 000002CD  83 C4 08			add esp, 8
 					
- 000002D5  A3 000007A7 R		mov status9, eax
- 000002DA  E9 FFFFFD26			jmp start
+					; Update status for menu
+ 000002D0  A3 0000095B R		mov status9, eax
+ 000002D5  E9 FFFFFD2B			jmp start
 
- 000002DF			choice10:
-					;String_startsWith_1(string1:Stirng,subString:String,pos:int):boolean
- 000002DF  68 0000072B R		push offset string1
- 000002E4  68 00000749 R		push offset string2
+				;------- Call String_startsWith_1 --------------------------
+				;	call String_startsWith_1 using c-calling convention
+				;-----------------------------------------------------------
+ 000002DA			choice10:
+ 000002DA  68 000008F3 R		push offset string1
+ 000002DF  68 00000911 R		push offset string2
 					
+					; Prompt for and recieve beginning index 
 					invoke putString, addr strSW1Prompt
 					invoke getString, addr strSW1Index, 10
 					invoke ascint32,  addr strSW1Index
- 00000309  50				push eax
-
- 0000030A  E8 00000000 E		call String_startsWith_1
- 0000030F  83 C4 0C			add esp, 12
+ 00000304  50				push eax
 					
- 00000312  83 F8 01			cmp eax, 1
- 00000315  C7 05 000007AB R		mov status10, offset strFalse
-	   00000719 R
- 0000031F  75 0A			jne continue10
- 00000321  C7 05 000007AB R		mov status10, offset strTrue
-	   00000714 R
- 0000032B			continue10:
- 0000032B  E9 FFFFFCD5			jmp start
-
- 00000330			choice11:
-					;String_startsWith_2(string1:Stirng,subString:String):boolean
- 00000330  68 0000072B R		push offset string1
- 00000335  68 00000749 R		push offset string2
- 0000033A  E8 00000000 E		call String_startsWith_2
- 0000033F  83 C4 08			add esp, 8
+					; String_startsWith_1(string1:Stirng,subString:String,pos:int):boolean
+ 00000305  E8 00000000 E		call String_startsWith_1
+ 0000030A  83 C4 0C			add esp, 12
 					
- 00000342  83 F8 01			cmp eax, 1
- 00000345  C7 05 000007AF R		mov status11, offset strFalse
-	   00000719 R
- 0000034F  75 0A			jne continue11
- 00000351  C7 05 000007AF R		mov status11, offset strTrue
-	   00000714 R
- 0000035B			continue11:
- 0000035B  E9 FFFFFCA5			jmp start
+					; Update status for menu
+ 0000030D  83 F8 01			cmp eax, 1
+ 00000310  C7 05 0000095F R		mov status10, offset strFalse
+	   000008E1 R
+ 0000031A  75 0A			jne continue10
+ 0000031C  C7 05 0000095F R		mov status10, offset strTrue
+	   000008DC R
+ 00000326			continue10:
+ 00000326  E9 FFFFFCDA			jmp start
 
- 00000360			choice12:
+				;------- Call String_startsWith_ ---------------------------
+				;	call String_startsWith_2 using c-calling convention
+				;-----------------------------------------------------------
+ 0000032B			choice11:
+					; String_startsWith_2(string1:Stirng,subString:String):boolean
+ 0000032B  68 000008F3 R		push offset string1
+ 00000330  68 00000911 R		push offset string2
+ 00000335  E8 00000000 E		call String_startsWith_2
+ 0000033A  83 C4 08			add esp, 8
+					
+					; Update status for menu 
+ 0000033D  83 F8 01			cmp eax, 1
+ 00000340  C7 05 00000963 R		mov status11, offset strFalse
+	   000008E1 R
+ 0000034A  75 0A			jne continue11
+ 0000034C  C7 05 00000963 R		mov status11, offset strTrue
+	   000008DC R
+ 00000356			continue11:
+ 00000356  E9 FFFFFCAA			jmp start
+					
+				;------- Call String_endsWith ------------------------------
+				;	call String_endsWith using c-calling convention
+				;-----------------------------------------------------------
+ 0000035B			choice12:
 					;String_endsWith(string1:String,subString:String):boolean
- 00000360  68 0000072B R		push offset string1
- 00000365  68 00000749 R		push offset string2
- 0000036A  E8 00000000 E		call String_endsWith
- 0000036F  83 C4 08			add esp, 8
+ 0000035B  68 000008F3 R		push offset string1
+ 00000360  68 00000911 R		push offset string2
+ 00000365  E8 00000000 E		call String_endsWith
+ 0000036A  83 C4 08			add esp, 8
 					
- 00000372  83 F8 01			cmp eax, 1
- 00000375  C7 05 000007B3 R		mov status12, offset strFalse
-	   00000719 R
- 0000037F  75 0A			jne continue12
- 00000381  C7 05 000007B3 R		mov status12, offset strTrue
-	   00000714 R
- 0000038B			continue12:
- 0000038B  E9 FFFFFC75			jmp start
+					; Update status for menu
+ 0000036D  83 F8 01			cmp eax, 1
+ 00000370  C7 05 00000967 R		mov status12, offset strFalse
+	   000008E1 R
+ 0000037A  75 0A			jne continue12
+ 0000037C  C7 05 00000967 R		mov status12, offset strTrue
+	   000008DC R
+ 00000386			continue12:
+ 00000386  E9 FFFFFC7A			jmp start
 
- 00000390			choice13:
- 00000390  E9 FFFFFC70			jmp start
+				;------- Call String_indexOf_1 ----------------------------
+				;	call String_indexOf_1 using c-calling convention
+				;-----------------------------------------------------------
+ 0000038B			choice13:
+ 0000038B  B8 00000000			mov eax, 0
+ 00000390  68 000008F3 R		push offset string1
+					
+					; Prompt and Get input
+					invoke putString, addr strIndexOf1Prompt
+					invoke getString, addr strIO1Choice,1
+ 000003AB  A0 000009DD R		mov al, byte ptr strIO1Choice
+ 000003B0  50				push eax 
+					
+					; String_indexOf_1(string1:String,ch:char):int  
+ 000003B1  E8 00000000 E		call String_indexOf_1
+ 000003B6  83 C4 08			add esp, 8
+					
+					; update status
+ 000003B9  A3 0000096B R		mov status13, eax
+ 000003BE  E9 FFFFFC42			jmp start
 
- 00000395			choice14:
- 00000395  E9 FFFFFC6B			jmp start
+				;------- Call String_indexOf_2 -----------------------------
+				;	call String_indexOf_2 using c-calling convention
+				;-----------------------------------------------------------
+ 000003C3			choice14:
+ 000003C3  B8 00000000			mov eax, 0
+ 000003C8  68 000008F3 R		push offset string1
 					
- 0000039A			choice15:
- 0000039A  E9 FFFFFC66			jmp start
+					; Prompt and Get input
+					invoke putString, addr strIndexOf2Prompt1
+					invoke getString, addr strIO2Choice1,1
+ 000003E3  A0 000009E7 R		mov al, byte ptr strIO2Choice1
+ 000003E8  50				push eax
 					
- 0000039F			choice16:
- 0000039F  E9 FFFFFC61			jmp start
+					; Prompt and Get input
+					invoke putString, addr strIndexOf2Prompt2
+					invoke getString, addr strIO2Choice2,1
+					invoke ascint32, addr strIO2Choice2
+ 00000409  50				push eax 
 					
- 000003A4			choice17:
- 000003A4  E9 FFFFFC5C			jmp start
+					; String_indexOf_2(string1:String,ch:char,index:int):int  
+ 0000040A  E8 00000000 E		call String_indexOf_2
+ 0000040F  83 C4 0C			add esp, 12
 					
- 000003A9			choice18:
- 000003A9  E9 FFFFFC57			jmp start
+					; update status
+ 00000412  A3 0000096F R		mov status14, eax
+ 00000417  E9 FFFFFBE9			jmp start
 					
- 000003AE			choice19:
- 000003AE  E9 FFFFFC52			jmp start
+				;------- Call String_indexOf_3 ------------------------------
+				;	call String_indexOf_3 using c-calling convention
+				;-----------------------------------------------------------
+ 0000041C			choice15:
+ 0000041C  68 000008F3 R		push offset string1
+ 00000421  68 00000911 R		push offset string2
+ 00000426  E8 00000000 E		call String_indexOf_3
+ 0000042B  83 C4 08			add esp, 8
 					
- 000003B3			choice20:
- 000003B3  E9 FFFFFC4D			jmp start
+ 0000042E  A3 00000973 R		mov status15, eax
+ 00000433  E9 FFFFFBCD			jmp start
 					
- 000003B8			choice21:
- 000003B8  E9 FFFFFC48			jmp start
+				;------- Call String_lastIndexOf_1 ----------------------------
+				;	call String_indexOf_1 using c-calling convention
+				;-----------------------------------------------------------
+ 00000438			choice16:
+ 00000438  B8 00000000			mov eax, 0
+ 0000043D  68 000008F3 R		push offset string1
 					
- 000003BD			choice22:
- 000003BD  E9 FFFFFC43			jmp start
+					; Prompt and Get input
+					invoke putString, addr strLIndexOf1Prompt
+					invoke getString, addr strLIO1Choice,1
+ 00000458  A0 000009FB R		mov al, byte ptr strLIO1Choice
+ 0000045D  50				push eax 
 					
- 000003C2			choice23:
- 000003C2  EB 00			jmp endProc
+					; String_lastIndexOf_1(string1:String,ch:char):int  
+ 0000045E  E8 00000000 E		call String_lastIndexOf_1
+ 00000463  83 C4 08			add esp, 8
 					
- 000003C4			endProc:
+					; update status
+ 00000466  A3 00000977 R		mov status16, eax
+ 0000046B  E9 FFFFFB95			jmp start
+					
+				;------- Call String_lastIndexOf_2 -------------------------
+				;	call String_indexOf_2 using c-calling convention
+				;-----------------------------------------------------------
+ 00000470			choice17:
+ 00000470  B8 00000000			mov eax, 0
+ 00000475  68 000008F3 R		push offset string1
+					
+					; Prompt and Get input
+					invoke putString, addr strLIndexOf2Prompt1
+					invoke getString, addr strLIO2Choice1,1
+ 00000490  A0 00000A05 R		mov al, byte ptr strLIO2Choice1
+ 00000495  50				push eax
+					
+					; Prompt and Get input
+					invoke putString, addr strLIndexOf2Prompt2
+					invoke getString, addr strLIO2Choice2,1
+					invoke ascint32, addr strLIO2Choice2
+ 000004B6  50				push eax 
+					
+					; String_lastIndexOf_2(string1:String,ch:char,index:int):int  
+ 000004B7  E8 00000000 E		call String_lastIndexOf_2
+ 000004BC  83 C4 0C			add esp, 12
+					
+					; update status
+ 000004BF  A3 0000097B R		mov status17, eax
+ 000004C4  E9 FFFFFB3C			jmp start
+					
+				;------- Call String_lastIndexOf_3 -------------------------
+				;	call String_indexOf_3 using c-calling convention
+				;-----------------------------------------------------------
+ 000004C9			choice18:
+ 000004C9  68 000008F3 R		push offset string1
+ 000004CE  68 00000911 R		push offset string2
+ 000004D3  E8 00000000 E		call String_lastIndexOf_3
+ 000004D8  83 C4 08			add esp, 8
+					
+ 000004DB  A3 0000097F R		mov status18, eax
+ 000004E0  E9 FFFFFB20			jmp start
+
+				;------- Call String_concat --------------------------------
+				;	call String_concat using c-calling convention
+				;-----------------------------------------------------------
+ 000004E5			choice19:
+ 000004E5  68 000008F3 R		push offset string1
+ 000004EA  68 00000911 R		push offset string2
+ 000004EF  E8 00000000 E		call String_concat
+ 000004F4  83 C4 08			add esp, 8
+					
+ 000004F7  A3 00000983 R		mov status19, eax
+ 000004FC  E9 FFFFFB04			jmp start
+					
+				;------- Call String_replace -------------------------------
+				;	call String_replace using c-calling convention
+				;-----------------------------------------------------------
+ 00000501			choice20:
+					; Prompt for choice to use string1 or string2
+					invoke putString, offset strReplacePrompt1
+					invoke getString, 	addr strReplaceChoice, 1
+					invoke ascint32, 	addr strReplaceChoice
+					
+					; Use string1
+ 00000521  83 F8 01			cmp eax, 1
+ 00000524  75 07			jne continue20
+ 00000526  68 000008F3 R		push offset string1
+ 0000052B  EB 0A			jmp continue20_2
+					
+					; Use string2
+ 0000052D			continue20:
+ 0000052D  83 F8 02			cmp eax, 2
+ 00000530  75 4A			jne noChoice20
+ 00000532  68 00000911 R		push offset string2
+					
+					; Prompt for chars and Call
+ 00000537			continue20_2:
+					invoke putString, offset strReplacePrompt2
+					invoke getString, 	addr strReplaceChar1, 1
+ 0000054D  A0 00000A23 R		mov al, byte ptr strReplaceChar1
+ 00000552  50				push eax 
+					
+					invoke putString, offset strReplacePrompt3
+					invoke getString, 	addr strReplaceChar2, 1
+ 00000569  A0 00000A2D R		mov al, byte ptr strReplaceChar2
+ 0000056E  50				push eax 
+					
+ 0000056F  E8 00000000 E		call String_replace
+ 00000574  83 C4 0C			add esp, 12
+					
+					; Update status for menu
+ 00000577  A3 00000987 R		mov status20, eax
+					
+ 0000057C			noChoice20:
+ 0000057C  E9 FFFFFA84			jmp start
+
+				;------- Call String_toLowerCase -------------------------
+				;	call String_toLowerCase using c-calling convention
+				;-----------------------------------------------------------	
+ 00000581			choice21:
+					; Prompt to make string1 or string2 lowercase
+					invoke putString, offset strToLowerPrompt
+					invoke getString, 	addr strLowerCaseChoice, 1
+					invoke ascint32, 	addr strLowerCaseChoice
+					
+					; Use string1
+ 000005A1  83 F8 01			cmp eax, 1
+ 000005A4  75 07			jne continue21
+ 000005A6  68 000008F3 R		push offset string1
+ 000005AB  EB 0A			jmp continue21_2
+					
+					; Use string2
+ 000005AD			continue21:
+ 000005AD  83 F8 02			cmp eax, 2
+ 000005B0  75 12			jne noChoice21
+ 000005B2  68 00000911 R		push offset string2
+					
+					; Call String_toLowerCase
+ 000005B7			continue21_2:
+ 000005B7  E8 00000000 E		call String_toLowerCase
+ 000005BC  83 C4 04			add esp, 4
+					
+					; Update status for menu
+ 000005BF  A3 0000098B R		mov status21, eax
+					
+ 000005C4			noChoice21:
+ 000005C4  E9 FFFFFA3C			jmp start
+
+				;------- Call String_toUpperCase -------------------------
+				;	call String_toUpperCase using c-calling convention
+				;-----------------------------------------------------------	
+ 000005C9			choice22:
+					; Prompt to make string1 or string2 Uppercase
+					invoke putString, offset strToHigherPrompt
+					invoke getString, 	addr strUpperCaseChoice, 1
+					invoke ascint32, 	addr strUpperCaseChoice
+					
+					; Use string1
+ 000005E9  83 F8 01			cmp eax, 1
+ 000005EC  75 07			jne continue22
+ 000005EE  68 000008F3 R		push offset string1
+ 000005F3  EB 0A			jmp continue22_2
+					
+					; Use string2
+ 000005F5			continue22:
+ 000005F5  83 F8 02			cmp eax, 2
+ 000005F8  75 12			jne noChoice22
+ 000005FA  68 00000911 R		push offset string2
+					
+					; Call String_uppercase
+ 000005FF			continue22_2:
+ 000005FF  E8 00000000 E		call String_toUpperCase
+ 00000604  83 C4 04			add esp, 4
+					
+					; Update status for menu
+ 00000607  A3 0000098F R		mov status22, eax
+					
+ 0000060C			noChoice22:
+ 0000060C  E9 FFFFF9F4			jmp start
+					
+ 00000611			choice23:
+ 00000611  EB 00			jmp endProc
+					
+ 00000613			endProc:
 					exit
- 000003CB			main ENDP
+ 0000061A			main ENDP
 					
 				;== String_length ==================================
 				; Return the number of characters in a string
 				;===================================================
- 000003CB			String_length proc 
- = [ebp + 8]				ptrString equ [ebp + 8]
- 000003CB  55				push ebp
- 000003CC  8B EC			mov ebp, esp
- 000003CE  56				push esi
- 000003CF  B8 00000000			mov eax, 0
- 000003D4  8B 75 08			mov esi, ptrString
- 000003D7			beginWhile:
- 000003D7  80 3E 00			cmp byte ptr [esi], 0
- 000003DA  74 04			je endWhile
- 000003DC  46				inc esi
- 000003DD  40				inc eax
- 000003DE  EB F7			jmp beginWhile
- 000003E0			endWhile:
- 000003E0  5E				pop esi
- 000003E1  5D				pop ebp
- 000003E2  C3				ret
- 000003E3			String_length endp
+ 0000061A			String_length proc 
+ = [ebp + 8]				ptrString equ [ebp + 8]	;get address of string
+ 0000061A  55				push ebp
+ 0000061B  8B EC			mov ebp, esp
+ 0000061D  56				push esi
+ 0000061E  B8 00000000			mov eax, 0
+ 00000623  8B 75 08			mov esi, ptrString
+ 00000626			beginWhile:
+ 00000626  80 3E 00			cmp byte ptr [esi], 0	;check for end of string
+ 00000629  74 04			je endWhile
+ 0000062B  46				inc esi					;inc eax and esi until esi 
+ 0000062C  40				inc eax					; points to null terminater
+ 0000062D  EB F7			jmp beginWhile
+ 0000062F			endWhile:
+ 0000062F  5E				pop esi
+ 00000630  5D				pop ebp
+ 00000631  C3				ret
+ 00000632			String_length endp
 
 				;== Print_Menu =====================================
 				; Print the menu and current status of the 
 				;	operations
 				;===================================================
- 000003E3			Print_Menu proc
- 000003E3  50				push eax
- 000003E4  52				push edx
+ 00000632			Print_Menu proc
+ 00000632  50				push eax	;used for brief settings
+ 00000633  52				push edx	;used for brief settings
+					
+					;-- Print start of menu---------------
+					;-------------------------------------
 					invoke putString, addr strMenu1
 					invoke putString, addr strMenu2
 					invoke putString, addr strMenu3
 					
+					;-- Print menu for String1 --------------------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice1
- 0000040D  83 3D 0000077B R		cmp status1, 0
+ 0000065C  83 3D 0000092F R		cmp status1, 0
 	   00
- 00000414  74 0B			je continue1
- 00000416  8B 15 0000077B R		mov edx, status1
- 0000041C  E8 00000000 E		call WriteString
- 00000421				continue1:
+ 00000663  74 0B			je continue1
+ 00000665  8B 15 0000092F R		mov edx, status1
+ 0000066B  E8 00000000 E		call WriteString
+ 00000670				continue1:
 					
+					;-- Print menu for String2 -------------------
+					;---------------------------------------------
 					invoke putString, addr strMenueChoice2
- 0000042B  83 3D 0000077F R		cmp status2, 0
+ 0000067A  83 3D 00000933 R		cmp status2, 0
 	   00
- 00000432  74 0B			je continue2
- 00000434  8B 15 0000077F R		mov edx, status2
- 0000043A  E8 00000000 E		call WriteString
- 0000043F				continue2:
+ 00000681  74 0B			je continue2
+ 00000683  8B 15 00000933 R		mov edx, status2
+ 00000689  E8 00000000 E		call WriteString
+ 0000068E				continue2:
 					
+					;-- Print menu for String Length---------------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice3
- 00000449  A1 00000783 R		mov eax, status3
- 0000044E  E8 00000000 E		call WriteDec
+ 00000698  A1 00000937 R		mov eax, status3
+ 0000069D  E8 00000000 E		call WriteDec
 					
+					;-- Print menu for String Equals---------------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice4
- 0000045D  83 3D 00000787 R		cmp status4, 0
+ 000006AC  83 3D 0000093B R		cmp status4, 0
 	   00
- 00000464  74 0B			je continue4
- 00000466  8B 15 00000787 R		mov edx, status4
- 0000046C  E8 00000000 E		call WriteString
- 00000471				continue4:
+ 000006B3  74 0B			je continue4
+ 000006B5  8B 15 0000093B R		mov edx, status4
+ 000006BB  E8 00000000 E		call WriteString
+ 000006C0				continue4:
 					
+					;-- Print menu for String EqualsIgnorCase -----
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice5
- 0000047B  83 3D 0000078B R		cmp status5, 0
+ 000006CA  83 3D 0000093F R		cmp status5, 0
 	   00
- 00000482  74 0B			je continue5
- 00000484  8B 15 0000078B R		mov edx, status5
- 0000048A  E8 00000000 E		call WriteString
- 0000048F				continue5:
+ 000006D1  74 0B			je continue5
+ 000006D3  8B 15 0000093F R		mov edx, status5
+ 000006D9  E8 00000000 E		call WriteString
+ 000006DE				continue5:
 					
+					;-- Print menu for String Copy ----------------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice6
- 00000499  83 3D 0000078F R		cmp statusAddress6, 0
+ 000006E8  83 3D 00000943 R		cmp statusAddress6, 0
 	   00
- 000004A0  74 0C			je coninue6
- 000004A2  A1 0000078F R		mov eax, statusAddress6
- 000004A7  E8 00000000 E		call WriteDec
- 000004AC  EB 0A			jmp end6
- 000004AE			coninue6:
- 000004AE  BA 0000071F R		mov edx, offset strZeros
- 000004B3  E8 00000000 E		call WriteString
- 000004B8			end6:
+ 000006EF  74 0C			je coninue6
+ 000006F1  A1 00000943 R		mov eax, statusAddress6
+ 000006F6  E8 00000000 E		call WriteDec
+ 000006FB  EB 0A			jmp end6
+ 000006FD			coninue6:
+ 000006FD  BA 000008E7 R		mov edx, offset strZeros
+ 00000702  E8 00000000 E		call WriteString
+ 00000707			end6:
 					invoke putString, addr strCurrently
- 000004C2  8B 15 00000793 R		mov edx, status6
- 000004C8  E8 00000000 E		call WriteString
-					
+ 00000711  8B 15 00000947 R		mov edx, status6
+ 00000717  E8 00000000 E		call WriteString
+
+					;-- Print menu for String SubString_1 ---------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice7
- 000004D7  83 3D 00000797 R		cmp statusAddress7, 0
+ 00000726  83 3D 0000094B R		cmp statusAddress7, 0
 	   00
- 000004DE  74 0C			je coninue7
- 000004E0  A1 00000797 R		mov eax, statusAddress7
- 000004E5  E8 00000000 E		call WriteDec
- 000004EA  EB 0A			jmp end7
- 000004EC			coninue7:
- 000004EC  BA 0000071F R		mov edx, offset strZeros
- 000004F1  E8 00000000 E		call WriteString
- 000004F6			end7:
+ 0000072D  74 0C			je coninue7
+ 0000072F  A1 0000094B R		mov eax, statusAddress7
+ 00000734  E8 00000000 E		call WriteDec
+ 00000739  EB 0A			jmp end7
+ 0000073B			coninue7:
+ 0000073B  BA 000008E7 R		mov edx, offset strZeros
+ 00000740  E8 00000000 E		call WriteString
+ 00000745			end7:
 					invoke putString, addr strCurrently
- 00000500  8B 15 0000079B R		mov edx, status7
- 00000506  E8 00000000 E		call WriteString
-					
+ 0000074F  8B 15 0000094F R		mov edx, status7
+ 00000755  E8 00000000 E		call WriteString
+
+					;-- Print menu for String SubString_1 ---------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice8
- 00000515  83 3D 0000078F R		cmp statusAddress6, 0
+ 00000764  83 3D 00000953 R		cmp statusAddress8, 0
 	   00
- 0000051C  74 0C			je coninue8
- 0000051E  A1 0000079F R		mov eax, statusAddress8
- 00000523  E8 00000000 E		call WriteDec
- 00000528  EB 0A			jmp end8
- 0000052A			coninue8:
- 0000052A  BA 0000071F R		mov edx, offset strZeros
- 0000052F  E8 00000000 E		call WriteString
- 00000534			end8:
+ 0000076B  74 0C			je coninue8
+ 0000076D  A1 00000953 R		mov eax, statusAddress8
+ 00000772  E8 00000000 E		call WriteDec
+ 00000777  EB 0A			jmp end8
+ 00000779			coninue8:
+ 00000779  BA 000008E7 R		mov edx, offset strZeros
+ 0000077E  E8 00000000 E		call WriteString
+ 00000783			end8:
 					invoke putString, addr strCurrently
- 0000053E  8B 15 000007A3 R		mov edx, status8
- 00000544  E8 00000000 E		call WriteString
-					
+ 0000078D  8B 15 00000957 R		mov edx, status8
+ 00000793  E8 00000000 E		call WriteString
+
+					;-- Print menu for String CharAt --------------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice9
- 00000553  83 3D 000007A7 R		cmp status9, 0
+ 000007A2  83 3D 0000095B R		cmp status9, 0
 	   00
- 0000055A  74 0C			je continue9
- 0000055C  A1 000007A7 R		mov eax, status9
- 00000561  E8 00000000 E		call WriteChar
- 00000566  EB 0A			jmp end9
- 00000568				continue9:
- 00000568  BA 0000070F R		mov edx, offset strNull
- 0000056D  E8 00000000 E		call WriteString
- 00000572				end9:
+ 000007A9  74 0C			je continue9
+ 000007AB  A1 0000095B R		mov eax, status9
+ 000007B0  E8 00000000 E		call WriteChar
+ 000007B5  EB 0A			jmp end9
+ 000007B7				continue9:
+ 000007B7  BA 000008D7 R		mov edx, offset strNull
+ 000007BC  E8 00000000 E		call WriteString
+ 000007C1				end9:
 					
+					;-- Print menu for String StartsWith_1 --------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice10
- 0000057C  83 3D 000007AB R		cmp status10, 0
+ 000007CB  83 3D 0000095F R		cmp status10, 0
 	   00
- 00000583  74 0B			je continue10
- 00000585  8B 15 000007AB R		mov edx, status10
- 0000058B  E8 00000000 E		call WriteString
- 00000590				continue10:
+ 000007D2  74 0B			je continue10
+ 000007D4  8B 15 0000095F R		mov edx, status10
+ 000007DA  E8 00000000 E		call WriteString
+ 000007DF				continue10:
 					
+					;-- Print menu for String StartsWith_2 --------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice11
- 0000059A  83 3D 000007AF R		cmp status11, 0
+ 000007E9  83 3D 00000963 R		cmp status11, 0
 	   00
- 000005A1  74 0B			je continue11
- 000005A3  8B 15 000007AF R		mov edx, status11
- 000005A9  E8 00000000 E		call WriteString
- 000005AE				continue11:
+ 000007F0  74 0B			je continue11
+ 000007F2  8B 15 00000963 R		mov edx, status11
+ 000007F8  E8 00000000 E		call WriteString
+ 000007FD				continue11:
 					
+					;-- Print menu for String EndsWith ------------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice12
- 000005B8  83 3D 000007B3 R		cmp status12, 0
+ 00000807  83 3D 00000967 R		cmp status12, 0
 	   00
- 000005BF  74 0B			je continue12
- 000005C1  8B 15 000007B3 R		mov edx, status12
- 000005C7  E8 00000000 E		call WriteString
- 000005CC				continue12:
+ 0000080E  74 0B			je continue12
+ 00000810  8B 15 00000967 R		mov edx, status12
+ 00000816  E8 00000000 E		call WriteString
+ 0000081B				continue12:
 					
+					;-- Print menu for String IndexOf 1 -----------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice13
+ 00000825  A1 0000096B R		mov eax, status13
+ 0000082A  E8 00000000 E		call WriteInt
+					
+					;-- Print menu for String IndexOf 2 -----------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice14
+ 00000839  A1 0000096F R		mov eax, status14
+ 0000083E  E8 00000000 E		call WriteInt
+					
+					;-- Print menu for String IndexOf 3 -----------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice15
+ 0000084D  A1 00000973 R		mov eax, status15
+ 00000852  E8 00000000 E		call WriteInt
+					
+					;-- Print menu for String LastIndexOf 1 -------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice16
+ 00000861  A1 00000977 R		mov eax, status16
+ 00000866  E8 00000000 E		call WriteInt
+					
+					;-- Print menu for String LastIndexOf 2 -------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice17
+ 00000875  A1 0000097B R		mov eax, status17
+ 0000087A  E8 00000000 E		call WriteInt
+					
+					;-- Print menu for String LastIndexOf 3 -------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice18
+ 00000889  A1 0000097F R		mov eax, status18
+ 0000088E  E8 00000000 E		call WriteInt
+					
+					;-- Print menu for String Concatenate ---------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice19
+ 0000089D  8B 15 00000983 R		mov edx, status19
+ 000008A3  E8 00000000 E		call WriteString
+					
+					;-- Print menu for String Replace -------------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice20
+ 000008B2  8B 15 00000987 R		mov edx, status20
+ 000008B8  E8 00000000 E		call WriteString
+					
+					;-- Print menu for String To Lowercase --------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice21
+ 000008C7  8B 15 0000098B R		mov edx, status21
+ 000008CD  E8 00000000 E		call WriteString
+					
+					;-- Print menu for String To Uppercase --------
+					;----------------------------------------------
 					invoke putString, addr strMenueChoice22
+ 000008DC  8B 15 0000098F R		mov edx, status22
+ 000008E2  E8 00000000 E		call WriteString
+					
 					invoke putString, addr strMenueChoice23
 					invoke putString, addr strMenueChoice24
 					invoke putString, addr strChoicePrompt
- 0000064E  5A				pop edx
- 0000064F  58				pop eax
- 00000650  C3				ret
- 00000651			Print_Menu endp
+ 00000905  5A				pop edx
+ 00000906  58				pop eax
+ 00000907  C3				ret
+ 00000908			Print_Menu endp
 
 				;== Initialize =====================================
-				;
+				; Initialize all statuses to show NULL, TRUE, FALSE
+				;	or 0
 				;===================================================
- 00000651			Initialize proc
- 00000651  C7 05 0000077B R		mov status1, offset strNull
-	   0000070F R
- 0000065B  C7 05 0000077F R		mov status2, offset strNull
-	   0000070F R
- 00000665  C7 05 00000783 R		mov status3, 0
+ 00000908			Initialize proc
+ 00000908  C7 05 0000092F R		mov status1, offset strNull
+	   000008D7 R
+ 00000912  C7 05 00000933 R		mov status2, offset strNull
+	   000008D7 R
+ 0000091C  C7 05 00000937 R		mov status3, 0
 	   00000000
- 0000066F  C7 05 00000787 R		mov status4, offset strFalse
-	   00000719 R
- 00000679  C7 05 0000078B R		mov status5, offset strFalse
-	   00000719 R
- 00000683  C7 05 00000793 R		mov status6, offset strNull
-	   0000070F R
- 0000068D  C7 05 0000078F R		mov statusAddress6, 0
+ 00000926  C7 05 0000093B R		mov status4, offset strFalse
+	   000008E1 R
+ 00000930  C7 05 0000093F R		mov status5, offset strFalse
+	   000008E1 R
+ 0000093A  C7 05 00000947 R		mov status6, offset strNull
+	   000008D7 R
+ 00000944  C7 05 00000943 R		mov statusAddress6, 0
 	   00000000
- 00000697  C7 05 0000079B R		mov status7, offset strNull
-	   0000070F R
- 000006A1  C7 05 00000797 R		mov statusAddress7, 0
+ 0000094E  C7 05 0000094F R		mov status7, offset strNull
+	   000008D7 R
+ 00000958  C7 05 0000094B R		mov statusAddress7, 0
 	   00000000
- 000006AB  C7 05 000007A3 R		mov status8,  offset strNull
-	   0000070F R
- 000006B5  C7 05 0000079F R		mov statusAddress8, 0
+ 00000962  C7 05 00000957 R		mov status8,  offset strNull
+	   000008D7 R
+ 0000096C  C7 05 00000953 R		mov statusAddress8, 0
 	   00000000
- 000006BF  C7 05 000007A7 R		mov status9, offset 0
+ 00000976  C7 05 0000095B R		mov status9, offset 0
 	   00000000
- 000006C9  C7 05 000007AB R		mov status10, offset strFalse
-	   00000719 R
- 000006D3  C7 05 000007AF R		mov status11, offset strFalse
-	   00000719 R
- 000006DD  C7 05 000007B3 R		mov status12, offset strFalse
-	   00000719 R
+ 00000980  C7 05 0000095F R		mov status10, offset strFalse
+	   000008E1 R
+ 0000098A  C7 05 00000963 R		mov status11, offset strFalse
+	   000008E1 R
+ 00000994  C7 05 00000967 R		mov status12, offset strFalse
+	   000008E1 R
+ 0000099E  C7 05 0000096B R		mov status13, -1
+	   FFFFFFFF
+ 000009A8  C7 05 0000096F R		mov status14, -1
+	   FFFFFFFF
+ 000009B2  C7 05 00000973 R		mov status15, -1
+	   FFFFFFFF
+ 000009BC  C7 05 00000977 R		mov status16, -1
+	   FFFFFFFF
+ 000009C6  C7 05 0000097B R		mov status17, -1
+	   FFFFFFFF
+ 000009D0  C7 05 0000097F R		mov status18, -1
+	   FFFFFFFF
+ 000009DA  C7 05 00000983 R		mov status19, offset strNull
+	   000008D7 R
+ 000009E4  C7 05 00000987 R		mov status20, offset strNull
+	   000008D7 R
+ 000009EE  C7 05 0000098B R		mov status21, offset strNull
+	   000008D7 R
+ 000009F8  C7 05 0000098F R		mov status22, offset strNull
+	   000008D7 R
 
- 000006E7  C3				ret
- 000006E8			Initialize endp
+ 00000A02  C3				ret
+ 00000A03			Initialize endp
 				end main
 
 
 
 
 
-Microsoft (R) Macro Assembler Version 6.14.8444		    04/19/18 10:20:13
+Microsoft (R) Macro Assembler Version 6.14.8444		    04/19/18 23:09:44
 MASM3.asm						     Symbols 2 - 1
 
 
@@ -1068,8 +1600,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 00000805 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 000006E8 Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000A4B Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000A03 Para	  Public  'CODE'	
 
 
 Procedures,  parameters and locals:
@@ -1115,7 +1647,7 @@ HeapCreate . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 HeapDestroy  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 HeapFree . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 HeapSize . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-Initialize . . . . . . . . . . .	P Near	 00000651 _TEXT	Length= 00000097 Public STDCALL
+Initialize . . . . . . . . . . .	P Near	 00000908 _TEXT	Length= 000000FB Public STDCALL
 IsDigit  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 LocalFree  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 MessageBoxA  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
@@ -1125,22 +1657,22 @@ OpenInputFile  . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 ParseDecimal32 . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 ParseInteger32 . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 PeekConsoleInputA  . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-Print_Menu . . . . . . . . . . .	P Near	 000003E3 _TEXT	Length= 0000026E Public STDCALL
-  continue1  . . . . . . . . . .	L Near	 00000421 _TEXT	
-  continue2  . . . . . . . . . .	L Near	 0000043F _TEXT	
-  continue4  . . . . . . . . . .	L Near	 00000471 _TEXT	
-  continue5  . . . . . . . . . .	L Near	 0000048F _TEXT	
-  coninue6 . . . . . . . . . . .	L Near	 000004AE _TEXT	
-  end6 . . . . . . . . . . . . .	L Near	 000004B8 _TEXT	
-  coninue7 . . . . . . . . . . .	L Near	 000004EC _TEXT	
-  end7 . . . . . . . . . . . . .	L Near	 000004F6 _TEXT	
-  coninue8 . . . . . . . . . . .	L Near	 0000052A _TEXT	
-  end8 . . . . . . . . . . . . .	L Near	 00000534 _TEXT	
-  continue9  . . . . . . . . . .	L Near	 00000568 _TEXT	
-  end9 . . . . . . . . . . . . .	L Near	 00000572 _TEXT	
-  continue10 . . . . . . . . . .	L Near	 00000590 _TEXT	
-  continue11 . . . . . . . . . .	L Near	 000005AE _TEXT	
-  continue12 . . . . . . . . . .	L Near	 000005CC _TEXT	
+Print_Menu . . . . . . . . . . .	P Near	 00000632 _TEXT	Length= 000002D6 Public STDCALL
+  continue1  . . . . . . . . . .	L Near	 00000670 _TEXT	
+  continue2  . . . . . . . . . .	L Near	 0000068E _TEXT	
+  continue4  . . . . . . . . . .	L Near	 000006C0 _TEXT	
+  continue5  . . . . . . . . . .	L Near	 000006DE _TEXT	
+  coninue6 . . . . . . . . . . .	L Near	 000006FD _TEXT	
+  end6 . . . . . . . . . . . . .	L Near	 00000707 _TEXT	
+  coninue7 . . . . . . . . . . .	L Near	 0000073B _TEXT	
+  end7 . . . . . . . . . . . . .	L Near	 00000745 _TEXT	
+  coninue8 . . . . . . . . . . .	L Near	 00000779 _TEXT	
+  end8 . . . . . . . . . . . . .	L Near	 00000783 _TEXT	
+  continue9  . . . . . . . . . .	L Near	 000007B7 _TEXT	
+  end9 . . . . . . . . . . . . .	L Near	 000007C1 _TEXT	
+  continue10 . . . . . . . . . .	L Near	 000007DF _TEXT	
+  continue11 . . . . . . . . . .	L Near	 000007FD _TEXT	
+  continue12 . . . . . . . . . .	L Near	 0000081B _TEXT	
 Random32 . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 RandomRange  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 Randomize  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
@@ -1174,9 +1706,9 @@ Str_copy . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 Str_length . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 Str_trim . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 Str_ucase  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-String_length  . . . . . . . . .	P Near	 000003CB _TEXT	Length= 00000018 Public STDCALL
-  beginWhile . . . . . . . . . .	L Near	 000003D7 _TEXT	
-  endWhile . . . . . . . . . . .	L Near	 000003E0 _TEXT	
+String_length  . . . . . . . . .	P Near	 0000061A _TEXT	Length= 00000018 Public STDCALL
+  beginWhile . . . . . . . . . .	L Near	 00000626 _TEXT	
+  endWhile . . . . . . . . . . .	L Near	 0000062F _TEXT	
 SystemTimeToFileTime . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WaitMsg  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteBinB  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
@@ -1198,40 +1730,49 @@ WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 ascint32 . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 getstring  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000003CB Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000061A Public STDCALL
   start  . . . . . . . . . . . .	L Near	 00000005 _TEXT	
-  choice1  . . . . . . . . . . .	L Near	 000000FE _TEXT	
-  choice2  . . . . . . . . . . .	L Near	 00000123 _TEXT	
-  choice3  . . . . . . . . . . .	L Near	 00000148 _TEXT	
-  continue3  . . . . . . . . . .	L Near	 00000174 _TEXT	
-  continue3_2  . . . . . . . . .	L Near	 0000017E _TEXT	
-  noChoice . . . . . . . . . . .	L Near	 0000018B _TEXT	
-  choice4  . . . . . . . . . . .	L Near	 00000190 _TEXT	
-  continue4  . . . . . . . . . .	L Near	 000001BB _TEXT	
-  choice5  . . . . . . . . . . .	L Near	 000001C0 _TEXT	
-  continue5  . . . . . . . . . .	L Near	 000001EB _TEXT	
-  choice6  . . . . . . . . . . .	L Near	 000001F0 _TEXT	
-  choice7  . . . . . . . . . . .	L Near	 0000020C _TEXT	
-  choice8  . . . . . . . . . . .	L Near	 0000026A _TEXT	
-  choice9  . . . . . . . . . . .	L Near	 000002A7 _TEXT	
-  choice10 . . . . . . . . . . .	L Near	 000002DF _TEXT	
-  continue10 . . . . . . . . . .	L Near	 0000032B _TEXT	
-  choice11 . . . . . . . . . . .	L Near	 00000330 _TEXT	
-  continue11 . . . . . . . . . .	L Near	 0000035B _TEXT	
-  choice12 . . . . . . . . . . .	L Near	 00000360 _TEXT	
-  continue12 . . . . . . . . . .	L Near	 0000038B _TEXT	
-  choice13 . . . . . . . . . . .	L Near	 00000390 _TEXT	
-  choice14 . . . . . . . . . . .	L Near	 00000395 _TEXT	
-  choice15 . . . . . . . . . . .	L Near	 0000039A _TEXT	
-  choice16 . . . . . . . . . . .	L Near	 0000039F _TEXT	
-  choice17 . . . . . . . . . . .	L Near	 000003A4 _TEXT	
-  choice18 . . . . . . . . . . .	L Near	 000003A9 _TEXT	
-  choice19 . . . . . . . . . . .	L Near	 000003AE _TEXT	
-  choice20 . . . . . . . . . . .	L Near	 000003B3 _TEXT	
-  choice21 . . . . . . . . . . .	L Near	 000003B8 _TEXT	
-  choice22 . . . . . . . . . . .	L Near	 000003BD _TEXT	
-  choice23 . . . . . . . . . . .	L Near	 000003C2 _TEXT	
-  endProc  . . . . . . . . . . .	L Near	 000003C4 _TEXT	
+  choice1  . . . . . . . . . . .	L Near	 000000F9 _TEXT	
+  choice2  . . . . . . . . . . .	L Near	 0000011E _TEXT	
+  choice3  . . . . . . . . . . .	L Near	 00000143 _TEXT	
+  continue3  . . . . . . . . . .	L Near	 0000016F _TEXT	
+  continue3_2  . . . . . . . . .	L Near	 00000179 _TEXT	
+  noChoice . . . . . . . . . . .	L Near	 00000186 _TEXT	
+  choice4  . . . . . . . . . . .	L Near	 0000018B _TEXT	
+  continue4  . . . . . . . . . .	L Near	 000001B6 _TEXT	
+  choice5  . . . . . . . . . . .	L Near	 000001BB _TEXT	
+  continue5  . . . . . . . . . .	L Near	 000001E6 _TEXT	
+  choice6  . . . . . . . . . . .	L Near	 000001EB _TEXT	
+  choice7  . . . . . . . . . . .	L Near	 00000207 _TEXT	
+  choice8  . . . . . . . . . . .	L Near	 00000265 _TEXT	
+  choice9  . . . . . . . . . . .	L Near	 000002A2 _TEXT	
+  choice10 . . . . . . . . . . .	L Near	 000002DA _TEXT	
+  continue10 . . . . . . . . . .	L Near	 00000326 _TEXT	
+  choice11 . . . . . . . . . . .	L Near	 0000032B _TEXT	
+  continue11 . . . . . . . . . .	L Near	 00000356 _TEXT	
+  choice12 . . . . . . . . . . .	L Near	 0000035B _TEXT	
+  continue12 . . . . . . . . . .	L Near	 00000386 _TEXT	
+  choice13 . . . . . . . . . . .	L Near	 0000038B _TEXT	
+  choice14 . . . . . . . . . . .	L Near	 000003C3 _TEXT	
+  choice15 . . . . . . . . . . .	L Near	 0000041C _TEXT	
+  choice16 . . . . . . . . . . .	L Near	 00000438 _TEXT	
+  choice17 . . . . . . . . . . .	L Near	 00000470 _TEXT	
+  choice18 . . . . . . . . . . .	L Near	 000004C9 _TEXT	
+  choice19 . . . . . . . . . . .	L Near	 000004E5 _TEXT	
+  choice20 . . . . . . . . . . .	L Near	 00000501 _TEXT	
+  continue20 . . . . . . . . . .	L Near	 0000052D _TEXT	
+  continue20_2 . . . . . . . . .	L Near	 00000537 _TEXT	
+  noChoice20 . . . . . . . . . .	L Near	 0000057C _TEXT	
+  choice21 . . . . . . . . . . .	L Near	 00000581 _TEXT	
+  continue21 . . . . . . . . . .	L Near	 000005AD _TEXT	
+  continue21_2 . . . . . . . . .	L Near	 000005B7 _TEXT	
+  noChoice21 . . . . . . . . . .	L Near	 000005C4 _TEXT	
+  choice22 . . . . . . . . . . .	L Near	 000005C9 _TEXT	
+  continue22 . . . . . . . . . .	L Near	 000005F5 _TEXT	
+  continue22_2 . . . . . . . . .	L Near	 000005FF _TEXT	
+  noChoice22 . . . . . . . . . .	L Near	 0000060C _TEXT	
+  choice23 . . . . . . . . . . .	L Near	 00000611 _TEXT	
+  endProc  . . . . . . . . . . .	L Near	 00000613 _TEXT	
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 putstring  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
@@ -1369,6 +1910,8 @@ STD_OUTPUT_HANDLE  . . . . . . .	Number	 -0000000Bh
 SetConsoleTitle  . . . . . . . .	Text   	 SetConsoleTitleA
 String_charAt@0  . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
 String_charAt  . . . . . . . . .	Text   	 String_charAt@0
+String_concat@0  . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+String_concat  . . . . . . . . .	Text   	 String_concat@0
 String_copy@0  . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
 String_copy  . . . . . . . . . .	Text   	 String_copy@0
 String_endsWith@0  . . . . . . .	L Near	 00000000 FLAT	External STDCALL
@@ -1377,6 +1920,20 @@ String_equals@0  . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
 String_equalsIgnoreCase@0  . . .	L Near	 00000000 FLAT	External STDCALL
 String_equalsIgnoreCase  . . . .	Text   	 String_equalsIgnoreCase@0
 String_equals  . . . . . . . . .	Text   	 String_equals@0
+String_indexOf_1@0 . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+String_indexOf_1 . . . . . . . .	Text   	 String_indexOf_1@0
+String_indexOf_2@0 . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+String_indexOf_2 . . . . . . . .	Text   	 String_indexOf_2@0
+String_indexOf_3@0 . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+String_indexOf_3 . . . . . . . .	Text   	 String_indexOf_3@0
+String_lastIndexOf_1@0 . . . . .	L Near	 00000000 FLAT	External STDCALL
+String_lastIndexOf_1 . . . . . .	Text   	 String_lastIndexOf_1@0
+String_lastIndexOf_2@0 . . . . .	L Near	 00000000 FLAT	External STDCALL
+String_lastIndexOf_2 . . . . . .	Text   	 String_lastIndexOf_2@0
+String_lastIndexOf_3@0 . . . . .	L Near	 00000000 FLAT	External STDCALL
+String_lastIndexOf_3 . . . . . .	Text   	 String_lastIndexOf_3@0
+String_replace@0 . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+String_replace . . . . . . . . .	Text   	 String_replace@0
 String_startsWith_1@0  . . . . .	L Near	 00000000 FLAT	External STDCALL
 String_startsWith_1  . . . . . .	Text   	 String_startsWith_1@0
 String_startsWith_2@0  . . . . .	L Near	 00000000 FLAT	External STDCALL
@@ -1385,6 +1942,10 @@ String_substring_1@0 . . . . . .	L Near	 00000000 FLAT	External STDCALL
 String_substring_1 . . . . . . .	Text   	 String_substring_1@0
 String_substring_2@0 . . . . . .	L Near	 00000000 FLAT	External STDCALL
 String_substring_2 . . . . . . .	Text   	 String_substring_2@0
+String_toLowerCase@0 . . . . . .	L Near	 00000000 FLAT	External STDCALL
+String_toLowerCase . . . . . . .	Text   	 String_toLowerCase@0
+String_toUpperCase@0 . . . . . .	L Near	 00000000 FLAT	External STDCALL
+String_toUpperCase . . . . . . .	Text   	 String_toUpperCase@0
 TAB  . . . . . . . . . . . . . .	Number	 00000009h   
 TRUE . . . . . . . . . . . . . .	Number	 00000001h   
 TRUNCATE_EXISTING  . . . . . . .	Number	 00000005h   
@@ -1472,12 +2033,11 @@ WriteConsole . . . . . . . . . .	Text   	 WriteConsoleA
 black  . . . . . . . . . . . . .	Number	 00000000h   
 blue . . . . . . . . . . . . . .	Number	 00000001h   
 brown  . . . . . . . . . . . . .	Number	 00000006h   
-choice . . . . . . . . . . . . .	DWord	 000007C1 _DATA	
 cyan . . . . . . . . . . . . . .	Number	 00000003h   
 exit . . . . . . . . . . . . . .	Text   	 INVOKE ExitProcess,0
 gray . . . . . . . . . . . . . .	Number	 00000008h   
 green  . . . . . . . . . . . . .	Number	 00000002h   
-lengthChoice . . . . . . . . . .	DWord	 000007CF _DATA	
+lengthChoice . . . . . . . . . .	DWord	 000009A7 _DATA	
 lightBlue  . . . . . . . . . . .	Number	 00000009h   
 lightCyan  . . . . . . . . . . .	Number	 0000000Bh   
 lightGray  . . . . . . . . . . .	Number	 00000007h   
@@ -1487,31 +2047,54 @@ lightRed . . . . . . . . . . . .	Number	 0000000Ch
 magenta  . . . . . . . . . . . .	Number	 00000005h   
 ptrString  . . . . . . . . . . .	Text   	 [ebp + 8]
 red  . . . . . . . . . . . . . .	Number	 00000004h   
-status10 . . . . . . . . . . . .	DWord	 000007AB _DATA	
-status11 . . . . . . . . . . . .	DWord	 000007AF _DATA	
-status12 . . . . . . . . . . . .	DWord	 000007B3 _DATA	
-status1  . . . . . . . . . . . .	DWord	 0000077B _DATA	
-status2  . . . . . . . . . . . .	DWord	 0000077F _DATA	
-status3  . . . . . . . . . . . .	DWord	 00000783 _DATA	
-status4  . . . . . . . . . . . .	DWord	 00000787 _DATA	
-status5  . . . . . . . . . . . .	DWord	 0000078B _DATA	
-status6  . . . . . . . . . . . .	DWord	 00000793 _DATA	
-status7  . . . . . . . . . . . .	DWord	 0000079B _DATA	
-status8  . . . . . . . . . . . .	DWord	 000007A3 _DATA	
-status9  . . . . . . . . . . . .	DWord	 000007A7 _DATA	
-statusAddress6 . . . . . . . . .	DWord	 0000078F _DATA	
-statusAddress7 . . . . . . . . .	DWord	 00000797 _DATA	
-statusAddress8 . . . . . . . . .	DWord	 0000079F _DATA	
-strCharAtIndex . . . . . . . . .	Byte	 000007F1 _DATA	
+status10 . . . . . . . . . . . .	DWord	 0000095F _DATA	
+status11 . . . . . . . . . . . .	DWord	 00000963 _DATA	
+status12 . . . . . . . . . . . .	DWord	 00000967 _DATA	
+status13 . . . . . . . . . . . .	DWord	 0000096B _DATA	
+status14 . . . . . . . . . . . .	DWord	 0000096F _DATA	
+status15 . . . . . . . . . . . .	DWord	 00000973 _DATA	
+status16 . . . . . . . . . . . .	DWord	 00000977 _DATA	
+status17 . . . . . . . . . . . .	DWord	 0000097B _DATA	
+status18 . . . . . . . . . . . .	DWord	 0000097F _DATA	
+status19 . . . . . . . . . . . .	DWord	 00000983 _DATA	
+status1  . . . . . . . . . . . .	DWord	 0000092F _DATA	
+status20 . . . . . . . . . . . .	DWord	 00000987 _DATA	
+status21 . . . . . . . . . . . .	DWord	 0000098B _DATA	
+status22 . . . . . . . . . . . .	DWord	 0000098F _DATA	
+status2  . . . . . . . . . . . .	DWord	 00000933 _DATA	
+status3  . . . . . . . . . . . .	DWord	 00000937 _DATA	
+status4  . . . . . . . . . . . .	DWord	 0000093B _DATA	
+status5  . . . . . . . . . . . .	DWord	 0000093F _DATA	
+status6  . . . . . . . . . . . .	DWord	 00000947 _DATA	
+status7  . . . . . . . . . . . .	DWord	 0000094F _DATA	
+status8  . . . . . . . . . . . .	DWord	 00000957 _DATA	
+status9  . . . . . . . . . . . .	DWord	 0000095B _DATA	
+statusAddress6 . . . . . . . . .	DWord	 00000943 _DATA	
+statusAddress7 . . . . . . . . .	DWord	 0000094B _DATA	
+statusAddress8 . . . . . . . . .	DWord	 00000953 _DATA	
+strCharAtIndex . . . . . . . . .	Byte	 000009C9 _DATA	
 strCharAtPrompt  . . . . . . . .	Byte	 000006BB _DATA	
 strChoicePrompt  . . . . . . . .	Byte	 000005BF _DATA	
-strChoice  . . . . . . . . . . .	Byte	 000007B7 _DATA	
+strChoice  . . . . . . . . . . .	Byte	 00000993 _DATA	
 strCurrently . . . . . . . . . .	Byte	 00000000 _DATA	
-strFalse . . . . . . . . . . . .	Byte	 00000719 _DATA	
+strFalse . . . . . . . . . . . .	Byte	 000008E1 _DATA	
 strGetString1Prompt  . . . . . .	Byte	 000005D1 _DATA	
 strGetString2Prompt  . . . . . .	Byte	 000005E4 _DATA	
-strLengthChoice  . . . . . . . .	Byte	 000007C5 _DATA	
+strIO1Choice . . . . . . . . . .	Byte	 000009DD _DATA	
+strIO2Choice1  . . . . . . . . .	Byte	 000009E7 _DATA	
+strIO2Choice2  . . . . . . . . .	Byte	 000009F1 _DATA	
+strIndexOf1Prompt  . . . . . . .	Byte	 0000070F _DATA	
+strIndexOf2Prompt1 . . . . . . .	Byte	 00000740 _DATA	
+strIndexOf2Prompt2 . . . . . . .	Byte	 00000771 _DATA	
+strLIO1Choice  . . . . . . . . .	Byte	 000009FB _DATA	
+strLIO2Choice1 . . . . . . . . .	Byte	 00000A05 _DATA	
+strLIO2Choice2 . . . . . . . . .	Byte	 00000A0F _DATA	
+strLIndexOf1Prompt . . . . . . .	Byte	 0000078E _DATA	
+strLIndexOf2Prompt1  . . . . . .	Byte	 000007BE _DATA	
+strLIndexOf2Prompt2  . . . . . .	Byte	 000007EE _DATA	
+strLengthChoice  . . . . . . . .	Byte	 0000099D _DATA	
 strLengthPrompt  . . . . . . . .	Byte	 000005F7 _DATA	
+strLowerCaseChoice . . . . . . .	Byte	 00000A37 _DATA	
 strMenu1 . . . . . . . . . . . .	Byte	 0000000D _DATA	
 strMenu2 . . . . . . . . . . . .	Byte	 00000044 _DATA	
 strMenu3 . . . . . . . . . . . .	Byte	 0000007B _DATA	
@@ -1539,21 +2122,29 @@ strMenueChoice6  . . . . . . . .	Byte	 000001C5 _DATA
 strMenueChoice7  . . . . . . . .	Byte	 000001F3 _DATA	
 strMenueChoice8  . . . . . . . .	Byte	 00000221 _DATA	
 strMenueChoice9  . . . . . . . .	Byte	 0000024F _DATA	
-strNewline . . . . . . . . . . .	Byte	 00000728 _DATA	
-strNull  . . . . . . . . . . . .	Byte	 0000070F _DATA	
-strSS1Begin  . . . . . . . . . .	Byte	 000007D3 _DATA	
-strSS1End  . . . . . . . . . . .	Byte	 000007DD _DATA	
-strSS2Begin  . . . . . . . . . .	Byte	 000007E7 _DATA	
-strSW1Index  . . . . . . . . . .	Byte	 000007FB _DATA	
+strNewline . . . . . . . . . . .	Byte	 000008F0 _DATA	
+strNull  . . . . . . . . . . . .	Byte	 000008D7 _DATA	
+strReplaceChar1  . . . . . . . .	Byte	 00000A23 _DATA	
+strReplaceChar2  . . . . . . . .	Byte	 00000A2D _DATA	
+strReplaceChoice . . . . . . . .	Byte	 00000A19 _DATA	
+strReplacePrompt1  . . . . . . .	Byte	 0000080B _DATA	
+strReplacePrompt2  . . . . . . .	Byte	 00000848 _DATA	
+strReplacePrompt3  . . . . . . .	Byte	 0000085E _DATA	
+strSS1Begin  . . . . . . . . . .	Byte	 000009AB _DATA	
+strSS1End  . . . . . . . . . . .	Byte	 000009B5 _DATA	
+strSS2Begin  . . . . . . . . . .	Byte	 000009BF _DATA	
+strSW1Index  . . . . . . . . . .	Byte	 000009D3 _DATA	
 strSW1Prompt . . . . . . . . . .	Byte	 000006E7 _DATA	
 strSubString1Prompt1 . . . . . .	Byte	 00000630 _DATA	
 strSubString1Prompt2 . . . . . .	Byte	 00000660 _DATA	
 strSubString2Prompt  . . . . . .	Byte	 0000068D _DATA	
-strTrue  . . . . . . . . . . . .	Byte	 00000714 _DATA	
-strZeros . . . . . . . . . . . .	Byte	 0000071F _DATA	
-string1  . . . . . . . . . . . .	Byte	 0000072B _DATA	
-string2  . . . . . . . . . . . .	Byte	 00000749 _DATA	
-subString  . . . . . . . . . . .	Byte	 00000767 _DATA	
+strToHigherPrompt  . . . . . . .	Byte	 000008A5 _DATA	
+strToLowerPrompt . . . . . . . .	Byte	 00000873 _DATA	
+strTrue  . . . . . . . . . . . .	Byte	 000008DC _DATA	
+strUpperCaseChoice . . . . . . .	Byte	 00000A41 _DATA	
+strZeros . . . . . . . . . . . .	Byte	 000008E7 _DATA	
+string1  . . . . . . . . . . . .	Byte	 000008F3 _DATA	
+string2  . . . . . . . . . . . .	Byte	 00000911 _DATA	
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
 wsprintf . . . . . . . . . . . .	Text   	 wsprintfA
 yellow . . . . . . . . . . . . .	Number	 0000000Eh   
